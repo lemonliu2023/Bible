@@ -273,6 +273,17 @@ function myNew(Fun, ...args) {
 let obj = myNew(One, "XiaoMing", "18");
 ```
 
+## For of
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
+
+遍历有迭代属性的数据，比如数组、类数组，可以手动添加迭代器next构造
+
+## Promise 诞生原因
+
+- 解决回调地狱 callback hell 可读性查，容易造成栈溢出的弊端
+- 回调函数的执行权限并不在回调函数的编写者的手上，而在异步函数编写者的手上，如果异步函数出了偏差，比如多次调用回调，或者忘了调用回调等等，回调函数这边就一脸懵逼了 参考资料：https://github.com/ascoders/weekly/issues/6
+
 # HTTP
 
 ## HTTP Streaming
@@ -1164,9 +1175,3 @@ function useEffect(callback, depsAry) {
 ## Hooks原理
 
 https://www.cnblogs.com/bejamin/p/15116546.html
-
-## For of
-
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
-
-遍历有迭代属性的数据，比如数组、类数组，可以手动添加迭代器next构造
