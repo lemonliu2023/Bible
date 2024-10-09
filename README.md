@@ -595,7 +595,7 @@ Content-Type: text/html;charset=utf-8
 
 ## 域名解析过程
 
-![](https://cdn.nlark.com/yuque/0/2021/png/1620126/1619263429461-e9f56146-ff6a-48ff-83a4-b67505682af2.png)
+![](./images/域名解析过程.png)
 
 在网上看了很多的域名解析过程，但是每个考虑的都不是很全，这里把他们整理了一下。
 
@@ -1687,7 +1687,7 @@ AdGuard 广告拦截器等 Chrome 插件内部的一个拦截规则是静态资�
 
 ### 1. 修改本地 HOST
 
-这里涉及 DNS 解析，具体情况如果不清楚的话请移步[域名解析过程](https://www.yuque.com/liuming-fhz1e/ulw981/qm2uvm)
+这里涉及 DNS 解析，具体情况如果不清楚的话请移步[#域名解析过程](#域名解析过程)
 
 
 
