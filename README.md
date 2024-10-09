@@ -3,6 +3,10 @@
   - [预加载](#预加载)
   - [HTTP Streaming](#http-streaming)
   - [grpc](#grpc)
+  - [HTTP状态码304与ETag详解](#http状态码304与etag详解)
+  - [HTTP Request 的 Header 信息](#http-request-的-header-信息)
+  - [HTTP Response的Header信息](#http-response的header信息)
+  - [域名解析过程](#域名解析过程)
 - [HTML](#html)
   - [label 标签介绍](#label-标签介绍)
   - [i和em标签的区别](#i和em标签的区别)
@@ -16,7 +20,16 @@
   - [原型链](#原型链)
     - [怎么理解原型链?](#怎么理解原型链)
     - [手写 new](#手写-new)
+  - [JS中的继承](#js中的继承)
+    - [1. 构造函数、实例](#1-构造函数实例)
+    - [2. 原型对象](#2-原型对象)
+    - [3. 继承](#3-继承)
+      - [组合继承](#组合继承)
+      - [寄生组合式继承](#寄生组合式继承)
   - [js快慢数组](#js快慢数组)
+  - [你写过axios请求拦截器的第二个参数吗](#你写过axios请求拦截器的第二个参数吗)
+  - [CheckVersions](#checkversions)
+  - [变量提升及词法作用域](#变量提升及词法作用域)
 - [TS](#ts)
   - [TS 函数重载](#ts-函数重载)
   - [TS 和 JS 通信](#ts-和-js-通信)
@@ -24,6 +37,54 @@
 - [代码格式化](#代码格式化)
   - [eslint](#eslint)
   - [Vetur](#vetur)
+- [前端场景](#前端场景)
+  - [开发中的广告处理](#开发中的广告处理)
+  - [常用的几种跨域解决方案](#常用的几种跨域解决方案)
+    - [1. 修改本地 HOST](#1-修改本地-host)
+    - [2. JSONP](#2-jsonp)
+    - [3. CORS](#3-cors)
+    - [4. Proxy](#4-proxy)
+  - [前端关闭浏览器自动翻译功能](#前端关闭浏览器自动翻译功能)
+  - [从Performance看浏览器渲染流程](#从performance看浏览器渲染流程)
+    - [资源在浏览器中的生命周期](#资源在浏览器中的生命周期)
+    - [前端资源加载流程](#前端资源加载流程)
+      - [\<script\>的执行 依赖它上面的CSS加载](#script的执行-依赖它上面的css加载)
+      - [\<script\>标签会阻塞 DOM 解析和渲染](#script标签会阻塞-dom-解析和渲染)
+      - [外链 \<script\> 会触发页面的 Paint](#外链-script-会触发页面的-paint)
+      - [\<link\> 标签不会阻塞 DOM 解析但会阻塞 DOM 渲染](#link-标签不会阻塞-dom-解析但会阻塞-dom-渲染)
+    - [浏览器性能指标](#浏览器性能指标)
+      - [FP(First Paint)](#fpfirst-paint)
+      - [DCL(domContentLoaded)](#dcldomcontentloaded)
+      - [L(loadEvent)](#lloadevent)
+    - [结论](#结论)
+      - [资源数据指标和用户视觉感知并不对等](#资源数据指标和用户视觉感知并不对等)
+      - [提升网站速度方法](#提升网站速度方法)
+      - [用户视觉层面的浏览器渲染](#用户视觉层面的浏览器渲染)
+  - [Script标签中的async和defer](#script标签中的async和defer)
+    - [普通Script](#普通script)
+    - [Defer](#defer)
+    - [Async](#async)
+    - [推荐的应用场景](#推荐的应用场景)
+      - [defer](#defer-1)
+      - [async](#async-1)
+  - [实现一个可以任意扩展接口的服务器，且能上传文件和文件下载](#实现一个可以任意扩展接口的服务器且能上传文件和文件下载)
+    - [探究原理](#探究原理)
+    - [文件上传方式](#文件上传方式)
+      - [Base64](#base64)
+      - [FormData](#formdata)
+    - [切片上传](#切片上传)
+      - [切片上传步骤](#切片上传步骤)
+      - [上传进度条](#上传进度条)
+      - [前端代码](#前端代码)
+      - [后端](#后端)
+    - [断点续传](#断点续传)
+    - [生成Hash](#生成hash)
+    - [维持浏览器最大并发数](#维持浏览器最大并发数)
+    - [文件下载](#文件下载)
+      - [直接下载](#直接下载)
+      - [直接下载(使用 a 标签 download 属性)](#直接下载使用-a-标签-download-属性)
+      - [直接下载(后端兼容处理 attachment)](#直接下载后端兼容处理-attachment)
+    - [代码：upload-download](#代码upload-download)
 - [算法](#算法)
   - [从交集时间中获取空闲时间段](#从交集时间中获取空闲时间段)
   - [ListToTree](#listtotree)
@@ -53,6 +114,15 @@
   - [性能优化之useMemo、useCallback](#性能优化之usememousecallback)
   - [性能优化之key](#性能优化之key)
   - [Ref 原理解读](#ref-原理解读)
+- [Vue](#vue)
+  - [ElementUI编辑数据resetFields失效](#elementui编辑数据resetfields失效)
+- [工程化](#工程化)
+  - [moment-locales-webpack-plugin插件](#moment-locales-webpack-plugin插件)
+  - [前端请求错误优雅处理](#前端请求错误优雅处理)
+    - [promise函数封装](#promise函数封装)
+      - [修改思路](#修改思路)
+      - [实践](#实践)
+    - [axios封装](#axios封装)
 - [杂七杂八](#杂七杂八)
   - [使用vnc访问远程系统](#使用vnc访问远程系统)
   - [mac安装windows虚拟机](#mac安装windows虚拟机)
@@ -231,6 +301,325 @@ gRPC-Web：
 实现复杂性：
 即使在服务器端和客户端都支持gRPC-Web的情况下，也需要额外的配置和设置来确保它们能够正确地通信。这增加了实现的复杂性。
 综上所述，虽然Web支持HTTP/2.0，但由于协议差异、浏览器限制、安全性考虑、缺乏广泛支持以及实现复杂性等因素，浏览器不能直接连接gRPC服务。然而，通过使用gRPC-Web等技术，可以在一定程度上实现浏览器与gRPC服务之间的通信。
+
+
+
+## HTTP状态码304与ETag详解
+
+状态码304相关头信息
+
+Last-Modified：响应头，表示当前资源的最后修改时间；
+
+If-Modified-Since：请求头，表示缓存的资源最后修改时间；
+
+状态码304：表示访问的资源没有改变
+
+
+
+客户端首次访问服务器的静态资源index.html，服务器会把index.html响应给客户端，而且还会添加一个名为Last-Modified的响应头，它说明了当前index.html的最后修改时间
+
+客户端收到响应后，会把index.html缓存在客户端上，而且还会把Last-Modified缓存起来。
+
+客户端第二次请求index.html时，会添加名为If-Modified-Since的请求头，它的值是上次服务器响应头Last-Modified，服务器获取到客户端保存的最后修改时间，以及当前资源的最后修改时间进行比较，如果相同，说明index.html没有改动过，那么服务器不会发送index.html，而是响应状态码304，即通知客户端资源没有改变，你可以使用自己的缓存。
+
+ETag 是 Entity Tag（实体标签）的缩写
+
+在HTTP1.1协议中其实就是请求HEAD中的一个属性
+
+```javascript
+HTTP/1.1 200 OK
+Date: Mon, 23 May 2005 22:38:34 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Encoding: UTF-8
+Content-Length: 138
+Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT
+Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
+ETag: "3f80f-1b6-3e1cb03b"
+Accept-Ranges: bytes
+Connection: close
+```
+
+ETag是HTTP1.1中才加入的一个属性，用来帮助服务器控制Web端的缓存验证。
+
+
+
+它的原理是这样的，当浏览器请求服务器的某项资源(A)时, 服务器根据A算出一个哈希值(3f80f-1b6-3e1cb03b)并通过 ETag 返回给浏览器，浏览器把"3f80f-1b6-3e1cb03b" 和 A 同时缓存在本地，当下次再次向服务器请求A时，会通过类似 If-None-Match: “3f80f-1b6-3e1cb03b” 的请求头把ETag发送给服务器，服务器再次计算A的哈希值并和浏览器返回的值做比较，如果发现A发生了变化就把A返回给浏览器(200)，如果发现A没有变化就给浏览器返回一个304未修改。
+
+
+
+这样通过控制浏览器端的缓存，可以节省服务器的带宽，因为服务器不需要每次都把全量数据返回给客户端。
+
+
+
+通常情况下，ETag更类似于资源指纹(fingerprints)，如果资源发生变化了就会生成一个新的指纹，这样可以快速的比较资源的变化。在服务器端实现中，很多情况下并不会用哈希来计算ETag，这会严重浪费服务器端资源，很多网站默认是禁用ETag的。有些情况下，可以把ETag退化，比如通过资源的版本或者修改时间来生成ETag。
+
+
+
+如果通过资源修改时间来生成ETag，那么效果和HTTP协议里面的另外一个控制属性(Last-Modified)就雷同了，使用 Last-Modified 的问题在于它的精度在秒(s)的级别，比较适合不太敏感的静态资源。
+
+
+
+## HTTP Request 的 Header 信息
+
+**1、HTTP请求方式**
+
+GET         向Web服务器请求一个文件
+
+POST        向Web服务器发送数据让Web服务器进行处理
+
+PUT         向Web服务器发送数据并存储在Web服务器内部
+
+HEAD        检查一个对象是否存在
+
+DELETE     从Web服务器上删除一个文件
+
+CONNECT   对通道提供支持
+
+TRACE       跟踪到服务器的路径
+
+OPTIONS    查询Web服务器的性能
+
+ 
+
+说明：
+
+主要使用到“GET”和“POST”。
+
+实例：
+
+POST /test/tupian/cm HTTP/1.1
+
+分成三部分：
+
+（1）POST：HTTP请求方式
+
+（2）/test/tupian/cm：请求Web服务器的目录地址（或者指令）
+
+（3）HTTP/1.1: URI（Uniform Resource Identifier，统一资源标识符）及其版本
+
+备注：
+
+​     在Ajax中，对应method属性设置。
+
+
+
+**2、Host**
+
+说明：
+
+请求的web服务器域名地址
+
+实例：
+
+例如web请求URL：http://zjm-forum-test10.zjm.baidu.com:8088/test/tupian/cm
+
+Host就为zjm-forum-test10.zjm.baidu.com:8088
+
+
+
+**3、User-Agent**
+
+说明：
+
+HTTP客户端运行的浏览器类型的详细信息。通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别。
+
+实例：
+
+  User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11
+
+
+
+**4、Accept**
+
+说明：
+
+指定客户端能够接收的内容类型，内容类型中的先后次序表示客户端接收的先后次序。
+
+实例：
+
+​     例如：
+
+Accept:text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
+备注：
+
+在Prototyp（1.5）的Ajax代码封装中，将Accept默认设置为“text/javascript, text/html, application/xml, text/xml, */*”。这是因为Ajax默认获取服务器返回的Json数据模式。
+
+在Ajax代码中，可以使用XMLHttpRequest 对象中setRequestHeader函数方法来动态设置这些Header信息。
+
+
+
+**5、Accept-Language**
+
+说明：
+
+  指定HTTP客户端浏览器用来展示返回信息所优先选择的语言。
+
+实例：
+
+Accept-Language: zh-cn,zh;q=0.5
+
+​     这里默认为中文。
+
+
+
+**6、Accept-Encoding**
+
+说明：
+
+​     指定客户端浏览器可以支持的web服务器返回内容压缩编码类型。表示允许服务器在将输出内容发送到客户端以前进行压缩，以节约带宽。而这里设置的就是客户端浏览器所能够支持的返回压缩格式。
+
+实例：
+
+​     Accept-Encoding: gzip,deflate
+
+备注：
+
+其实在百度很多产品线中，apache在给客户端返回页面数据之前，将数据以gzip格式进行压缩。
+
+另外有关deflate压缩介绍：
+
+http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html
+
+
+
+**7、Accept-Charset**
+
+说明：
+
+​     浏览器可以接受的字符编码集。
+
+实例：
+
+​     Accept-Charset: gb2312,utf-8;q=0.7,*;q=0.7
+
+
+
+**8、Content-Type**
+
+说明：
+
+显示此HTTP请求提交的内容类型。一般只有post提交时才需要设置该属性。
+
+实例：
+
+​     Content-type: application/x-www-form-urlencoded;charset:UTF-8
+
+有关Content-Type属性值可以如下两种编码类型：
+
+（1）“application/x-www-form-urlencoded”： 表单数据向服务器提交时所采用的编码类型，默认的缺省值就是“application/x-www-form-urlencoded”。 然而，在向服务器发送大量的文本、包含非ASCII字符的文本或二进制数据时这种编码方式效率很低。
+
+（2）“multipart/form-data”： 在文件上载时，所使用的编码类型应当是“multipart/form-data”，它既可以发送文本数据，也支持二进制数据上载。
+
+当提交为单单数据时，可以使用“application/x-www-form-urlencoded”；当提交的是文件时，就需要使用“multipart/form-data”编码类型。
+
+在Content-Type属性当中还是指定提交内容的charset字符编码。一般不进行设置，它只是告诉web服务器post提交的数据采用的何种字符编码。
+
+​     一般在开发过程，是由前端工程与后端UI工程师商量好使用什么字符编码格式来post提交的，然后后端ui工程师按照固定的字符编码来解析提交的数据。所以这里设置的charset没有多大作用。
+
+
+
+**9、****Connection**
+
+说明：
+
+表示是否需要持久连接。如果web服务器端看到这里的值为“Keep-Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接），它就可以利用持久连接的优点，当页面包含多个元素时（例如Applet，图片），显著地减少下载所需要的时间。要实现这一点， web服务器需要在返回给客户端HTTP头信息中发送一个Content-Length（返回信息正文的长度）头，最简单的实现方法是：先把内容写入ByteArrayOutputStream，然 后在正式写出内容之前计算它的大小。
+
+实例：
+
+**Connection: keep-alive**
+
+
+
+**10、Keep-Alive**
+
+说明：
+
+​     显示此HTTP连接的Keep-Alive时间。使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
+
+​     以前HTTP请求是一站式连接，从HTTP/1.1协议之后，就有了长连接，即在规定的Keep-Alive时间内，连接是不会断开的。
+
+实例：
+
+**Keep-Alive: 300**
+
+
+
+**11、cookie**
+
+说明：
+
+​     HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。
+
+**12、Referer**
+
+说明：
+
+包含一个URL，用户从该URL代表的页面出发访问当前请求的页面
+
+
+
+
+
+## HTTP Response的Header信息
+
+
+
+**1、Content-Length**
+
+说明：
+
+​     表示web服务器返回消息正文的长度
+
+
+
+**2、Content-Type:**
+
+说明：
+
+​     返回数据的类型（例如text/html文本类型）和字符编码格式。
+
+实例：
+
+Content-Type: text/html;charset=utf-8
+
+
+
+**3、Date**
+
+说明：
+
+​     显示当前的时间
+
+
+
+## 域名解析过程
+
+![](https://cdn.nlark.com/yuque/0/2021/png/1620126/1619263429461-e9f56146-ff6a-48ff-83a4-b67505682af2.png)
+
+在网上看了很多的域名解析过程，但是每个考虑的都不是很全，这里把他们整理了一下。
+
+我们拿 <font style="color:#121212;">www.qq.com  来举</font><font style="color:#121212;">🌰</font><font style="color:#121212;">：</font>
+
+1. 在浏览器中输入 www.qq.com 域名，浏览器会在本地缓存中查找是否含有此域名的映射关系，如果有，<font style="color:#121212;">就调用这个IP地址映射，完成域名解析</font>
+2. <font style="color:#121212;">如果浏览器没有这个域名映射，</font><font style="color:#121212;">操作系统会先检查自己本地的hosts文件是否有这个网址映射关系，如果有，就先调用这个IP地址映射，完成域名解析</font>
+3. <font style="color:#121212;">如果hosts里没有这个域名的映射，则查找本地DNS解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析</font>
+4. 如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找TCP/ip参数中设置的首选DNS服务器，在此我们叫它本地DNS服务器，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。
+5. <font style="color:#121212;">如果要查询的域名，不由本地DNS服务器区域解析，但该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。</font>
+6. 如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（是否设置转发器）进行查询，如果未用转发模式，本地DNS就把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址([http://qq.com](https://link.zhihu.com/?target=http%3A//qq.com))给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找[http://qq.com](https://link.zhihu.com/?target=http%3A//qq.com)域服务器，重复上面的动作，进行查询，直至找到www.qq.com主机。
+7. 如果用的是转发模式，此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。
+
+<font style="color:#121212;">从客户端到本地DNS服务器是属于递归查询，而DNS服务器之间就是的交互查询就是迭代查询。</font>
+
+
+
+<font style="color:#121212;">这里涉及两个概念：递归查询和迭代查询。</font>
+
+<font style="color:#333333;">递归是用户只向本地DNS服务器发出请求，然后等待肯定或否定答案。而迭代是本地服务器向根DNS服务器发出请求，而根DNS服务器只是给出下一级DNS服务器的地址，然后本地DNS服务器再向下一级DNS发送查询请求直至得到最终答案。</font>
+
+
+
+
 
 # HTML
 
@@ -653,11 +1042,449 @@ function myNew(Fun, ...args) {
 let obj = myNew(One, "XiaoMing", "18");
 ```
 
+
+
+## JS中的继承
+
+### 1. 构造函数、实例
+
+构造函数是用来创建对象的函数，本质上与普通函数无区别，只是调用方式有异
+
+- 如果用 new 操作符来调用的就是构造函数
+- 没有用 new 操作符直接调用的就是普通函数
+- 为了区分两者，口头约定构造函数的首字母大写
+
+🌰：
+
+```javascript
+function Person(name, age) {
+	this.name = name
+  this.age = age
+}
+const person1 = new Person('lm', 20)
+```
+
+上文中的 person1 就称为 **构造函数**，person1 称为 Person 函数对象的一个 **实例**
+
+
+
+### 2. 原型对象
+
+我们每次创建一个函数的时候，函数对象都会有一个 prototype 属性，这个属性是一个指针，指向它的原型对象
+
+🌰：
+
+```javascript
+function Person(name, age) {
+	this.name = name
+  this.age = age
+}
+console.log(Person.prototype) // object {constructor: Person}
+const person1 = new Person()
+console.log(person1.__proto__) // object {constructor: Person}
+```
+
+可以看到`Person.prototype`指向了一个对象，即**Person的原型对象**，并且这个对象有一个`constructor`属性，又指向了`Person`函数对象，而且实例 person1 的 `__proto__` 也指向了 Person的原型对象，所以他们之间存在如下关系
+
+Person.prototype === person1.__proto__
+
+Person.prototype.constructor === Person
+
+
+
+### 3. 继承
+
+继承本质上就是子类身上存在父类身上的属性和方法并且保持原型链的完整性
+
+有如下构造函数
+
+```javascript
+function Person(name, age) {
+	this.name = name
+  this.age = age
+}
+```
+
+#### 组合继承
+
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+function Child(name) {
+    Person.call(this, name)
+}
+
+Child.prototype = new Person();
+
+const child1 = new Child('foo');
+
+console.log(child1) // => Person { name: 'foo', age: undefined }
+```
+
+特点：1、可以继承父类原型上的属性，可以传参，可复用。
+
+　　　2、每个新实例引入的构造函数属性是私有的。
+
+缺点：调用了两次父类构造函数（耗内存），子类的构造函数会代替原型上的那个父类构造函数。
+
+
+
+#### 寄生组合式继承
+
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+function content(obj) {
+    function F() {}
+    F.prototype = obj;
+    return new F()
+}
+
+const con = content(Person.prototype)
+
+function Child(name) {
+    Person.call(this, name)
+}
+
+Child.prototype = con;
+
+const child1 = new Child('foo');
+
+console.log(child1)
+```
+
+简单写法：
+
+```javascript
+function A() {
+  this.a = 'hello';
+}
+
+function B() {
+  A.call(this);
+  this.b = 'world';
+}
+
+B.prototype = Object.create(A.prototype, {
+  constructor: { value: B, writable: true, configurable: true }
+});
+
+let b = new B();
+```
+
+
+
 ## js快慢数组
 
 [前端进阶算法2：从Chrome V8源码看JavaScript数组](https://github.com/sisterAn/JavaScript-Algorithms/issues/2)
 
 总结：v8 封装底层数组自动扩容减容，减少开发者认知负担
+
+## 你写过axios请求拦截器的第二个参数吗
+最近在重构老项目逻辑时，需要对axios进行二次封装，在写到请求拦截器的第二个参数时突然有个疑问，什么时候第二个reject函数参数执行呢？
+
+现在翻阅一些博客，大部分都会默认写上这个处理
+
+![11](./images/1657731981466-d16e56da-98c7-4f01-a68d-515bfde5aaf9-20241009104526868.png)
+
+调用时机呢？一些文章解释网络错误的时候会走
+
+![22](./images/1657732110715-91f1042a-0c97-4f4d-b90e-5e800622bbc9-20241009104543291.png)
+
+从历史写代码的经验来看，如果错误了会走到响应拦截器的第二个参数，好像并没有执行请求拦截器的代码(我研究的是axios0.19.x之后的代码，不排除之前版本的axios是这个逻辑)
+
+我看了axios0.19.x和0.27.x的源码，这两个版本对于这部分的处理还是不相同的，先来一个简单的
+
+
+**一、0.19.x版本**
+```javascript
+// axios/lib/core/Axios.js
+Axios.prototype.request = function request(config) {
+  /*eslint no-param-reassign:0*/
+  // Allow for axios('example/url'[, config]) a la fetch API
+  if (typeof config === 'string') {
+    config = arguments[1] || {};
+    config.url = arguments[0];
+  } else {
+    config = config || {};
+  }
+
+  config = mergeConfig(this.defaults, config);
+  config.method = config.method ? config.method.toLowerCase() : 'get';
+
+  // Hook up interceptors middleware
+  var chain = [dispatchRequest, undefined];
+  var promise = Promise.resolve(config);
+
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    chain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    chain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  while (chain.length) {
+    promise = promise.then(chain.shift(), chain.shift());
+  }
+
+  return promise;
+};
+```
+
+首先从第19行可以看出，axios的请求拦截器是支持传多个的，最终会都传到`this.interceptors.request`的数组中
+
+第16行的`chain`是一个数组，默认存储的是`dispatchRequest请求`和`undefined`，而后会将请求拦截器的处理函数插到chain数组的头，如果我们只配置了一个请求拦截器，此时的chain为
+
+```javascript
+var chain = [interceptor.fulfilled, interceptor.rejected, dispatchRequest, undefined]
+```
+
+而后27行开始执行，`promise`默认第一次是`Promise.resolve(config)`，.then链式调用
+
+```javascript
+promise = promise.then(interceptor.fulfilled, interceptor.rejected)
+```
+
+此时的promise是不可能走到reject状态的，所以**如果配置了一个请求拦截器第二个函数参数是永远不会走的**
+
+那什么时候会走呢？
+
+我们来多配置一个请求拦截器
+
+```javascript
+var chain = [interceptor1.fulfilled, interceptor1.rejected,interceptor2.fulfilled, interceptor2.rejected, dispatchRequest, undefined]
+```
+
+刚开始还是上面的逻辑，当走到第二个promise时
+
+```javascript
+promise = promise.then(interceptor2.fulfilled, interceptor2.rejected)
+```
+
+此时的promise为第一个请求拦截器的调用，如果**第一个请求拦截器的第一个fulfilled函数出错的时候，就会调用第二个请求拦截器的第二个参数，是跨级的promise**
+
+
+**二、0.27.x版本**
+相比于0.19.x，0.27.x版本增加了同步异步的配置，大概原因是解决前面版本的拦截器只能链式同步走的问题
+
+```javascript
+Axios.prototype.request = function request(configOrUrl, config) {
+  // ...
+  // filter out skipped interceptors
+  var requestInterceptorChain = [];
+  var synchronousRequestInterceptors = true;
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
+      return;
+    }
+
+    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+
+    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  var responseInterceptorChain = [];
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  var promise;
+
+  if (!synchronousRequestInterceptors) {
+    var chain = [dispatchRequest, undefined];
+
+    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+    chain = chain.concat(responseInterceptorChain);
+
+    promise = Promise.resolve(config);
+    while (chain.length) {
+      promise = promise.then(chain.shift(), chain.shift());
+    }
+
+    return promise;
+  }
+
+
+  var newConfig = config;
+  while (requestInterceptorChain.length) {
+    var onFulfilled = requestInterceptorChain.shift();
+    var onRejected = requestInterceptorChain.shift();
+    try {
+      newConfig = onFulfilled(newConfig);
+    } catch (error) {
+      onRejected(error);
+      break;
+    }
+  }
+
+  try {
+    promise = dispatchRequest(newConfig);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  while (responseInterceptorChain.length) {
+    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
+  }
+
+  return promise;
+};
+```
+
+第23、39行是两段是对请求拦截器的两种处理，区别在于 `synchronousRequestInterceptors`是 true / false
+
+第5、11行是对`synchronousRequestInterceptors`变量的处理，依赖的是 `interceptor.synchronous`，它是通过第三个options参数传过来的，如下
+
+```javascript
+axios.default.interceptors.request.use((config) => {
+  return config
+}, (err) => {
+  return Promise.reject(err)
+}, {
+  synchronous: true
+})
+```
+
+默认是`undefined`，则默认走的是0.19.x版本的链式同步逻辑
+
+如果所有请求拦截器传的都是true，则走异步逻辑
+
+从39行开始，它将**所有请求拦截器的函数异步执行，第二个参数会在第一个参数出错后执行，是同级的promise**
+
+
+
+## CheckVersions
+
+```javascript
+'use strict'
+const chalk = require('chalk')
+const semver = require('semver')
+const packageConfig = require('../package.json')
+const shell = require('shelljs')
+
+function exec (cmd) {
+  return require('child_process').execSync(cmd).toString().trim()
+}
+
+const versionRequirements = [
+  {
+    name: 'node',
+    currentVersion: semver.clean(process.version),
+    versionRequirement: packageConfig.engines.node
+  }
+]
+
+if (shell.which('npm')) {
+  versionRequirements.push({
+    name: 'npm',
+    currentVersion: exec('npm --version'),
+    versionRequirement: packageConfig.engines.npm
+  })
+}
+
+module.exports = function () {
+  const warnings = []
+
+  for (let i = 0; i < versionRequirements.length; i++) {
+    const mod = versionRequirements[i]
+
+    if (!semver.satisfies(mod.currentVersion, mod.versionRequirement)) {
+      warnings.push(mod.name + ': ' +
+        chalk.red(mod.currentVersion) + ' should be ' +
+        chalk.green(mod.versionRequirement)
+      )
+    }
+  }
+
+  if (warnings.length) {
+    console.log('')
+    console.log(chalk.yellow('To use this template, you must update following to modules:'))
+    console.log()
+
+    for (let i = 0; i < warnings.length; i++) {
+      const warning = warnings[i]
+      console.log('  ' + warning)
+    }
+
+    console.log()
+    process.exit(1)
+  }
+}
+"engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+```
+
+
+
+
+
+## 变量提升及词法作用域
+
+**词法作用域 (Lexical Scope)**
+
+词法作用域也就是在词法阶段定义的作用域，也就是说词法作用域在代码书写时就已经确定。
+
+每个函数都有自己的词法作用域，词法作用域保存在自身函数属性 `[[Scope]]` 中，在该 `[[Scope]]` 中会预先包含至全局变量对象的作用域链。
+
+可通过 `eval` 和 `with` 来改变词法作用域，但不建议使用。
+
+词法作用域中存放着代表变量或函数的标识符。
+
+看以下示例：
+
+```javascript
+var a = 10
+
+function fn() {
+  console.log(a)
+}
+
+function run() {
+  var a = 20
+  fn()
+}
+
+run() // 打印结果：10
+```
+
+
+
+如果按按动态作用域来说，`a` 的值应该是 20，但 `JavaScript` 是静态作用域，所以在编译时就确认了函数自身的作用域，在编译时函数 `fn` 里没有变量 `a`，但它的父执行上下文是全局上下文，在全局上下文中变量 `a` 的值是10。
+
+**🌰**
+
+```javascript
+console.log(a);
+console.log(typeof yideng(a));
+var flag = true;
+if(!flag) {
+    var a = 1;
+}
+if(flag) {
+    function yideng(a) {
+        yideng = a;
+        console.log('yideng1');
+    }
+} else {
+    function yideng(a) {
+        yideng = a;
+        console.log('yideng2');
+    }
+}
+```
+
+这里存在两种两个词法作用域，一个是全局另一个是函数内，所以第一行的代码不会报错
+
+
 
 # TS
 
@@ -833,7 +1660,1700 @@ module.exports = {
 vetur 默认格式化 template 的插件是 prettier，需要改下 vscode 配置
 ![image.png](./images/14-image.png)
 
+
+
+# 前端场景
+
+## 开发中的广告处理
+
+AdGuard 广告拦截器等 Chrome 插件内部的一个拦截规则是静态资源中含有 ad、adv、advertisement 等敏感字段，所以在开发中的静态资源应避免使用以上关于广告的字段的命名。
+
+
+
+## 常用的几种跨域解决方案
+
+同源: 如果两个 URL 的 protocol、主机名 host 和端口号 port 都相同的话，则这两个 URL 同源
+
+**同源策略**<font style="color:#212121;">是一个重要的安全策略，它用于限制一个</font>[origin](https://developer.mozilla.org/zh-CN/docs/Glossary/Origin)<font style="color:#212121;">的文档或者它加载的脚本如何能与另一个源的资源进行交互。它能帮助阻隔恶意文档，减少可能被攻击的媒介。</font>
+
+**造成跨域的几种常见表现**
+
++ 服务器分开部署（Web服务器 + 数据请求服务器）
++ 本地开发（本地开发项目请求测试服务器数据）
++ 调取第三方平台的接口
+
+
+
+
+### 1. 修改本地 HOST
+
+这里涉及 DNS 解析，具体情况如果不清楚的话请移步[域名解析过程](https://www.yuque.com/liuming-fhz1e/ulw981/qm2uvm)
+
+
+
+### 2. JSONP
+
+> 原理： JSONP 利用 script 标签不存在域的限制，且定义一个 全局执行上下文 中的函数 func（用来接收服务器端返回的数据信息）来接收数据，从而实现跨域请求
+
+**弊端：**
+
++ 只允许 GET 请求
++ 不安全，只要浏览器支持，且存在浏览器的全局变量里，则谁都可以调用
++ 需要后端配合
+
+**图解 JSONP 的原理**
+![11](./images/1619338996770-aa9e4f54-4658-4297-9d1e-787eb0d9f516.png)
+
+**手写 JSONP**
+callback必须是一个全局上下文中的函数（防止不是全局的函数，我们需要把这个函数放在全局上，并且从服务器端接收回信息时，要浏览器执行该函数）
+
+uniqueName 要确保唯一性
+
+**client**
+
+```javascript
+function jsonp(url, callback) {
+    // 把传递的回调函数挂载到全局上
+    let uniqueName = `jsonp${new Date().getTime()}`;
+     // 套了一层 anonymous function
+    // 目的让 返回的callback执行且删除创建的标签
+    window[uniqueName] = data => {
+        document.body.removeChild(script)
+        delete window[uniqueName];
+        callback && callback(data);
+    }
+    
+    // 处理URL
+    url += `${url.includes('?') ? '&' : '?'}callback=${uniqueName}`;
+    
+    // 发送请求
+    let script = document.createElement('script');
+    script.src = url;
+    document.body.appendChild(script);
+}
+
+jsonp('http://localhost:3000/list?userName=lm', res => {
+    console.log(res)
+})
+```
+
+**server**
+
+```javascript
+app.use('/list', (req,res) => {
+    console.log(req.query)
+    let { callback } = req.query;
+  
+  // 准备返回的数据（字符串）
+  let result = { code: 0, data: [10,20] };
+  let str = `${callback}(${JSON.stringify(result)})`;
+  
+  // 返回给客户端数据
+  res.send(str);
+})
+```
+
+
+
+### 3. CORS
+
+不允许跨域的根本原因是因为`Access-Control-Allow-Origin`已被禁止，那么只要让服务器端设置允许源就可以了
+
+```javascript
+// 服务器端
+app.use((req, res, next) => {
+ // * 允许所有源（不安全/不能携带资源凭证）
+ res.header("Access-Control-Allow-Origin", "*");
+ res.header("Access-Control-Allow-Credentials", true);
+
+ /* res.header("Access-Control-Allow-Headers", "Content-Type,....");
+ res.header("Access-Control-Allow-Methods", "GET,..."); */
+
+ // 试探请求：在CORS跨域请求中，首先浏览器会自己发送一个试探请求，验证是否可以和服务器跨域通信，服务器返回200，则浏览器继续发送真实的请求
+ req.method === 'OPTIONS' ? res.send('CURRENT SERVICES SUPPORT CROSS DOMAIN REQUESTS!') : next();
+});
+
+// 客户端
+let xhr = new XMLHttpRequest;
+xhr.open('get', 'http://127.0.0.1:1001/list');
+xhr.setRequestHeader('Cookie', 'name=jason');
+xhr.withCredentials = true;
+xhr.onreadystatechange = () => {
+  if (xhr.status === 200 && xhr.readyState === 4) {
+    console.log(xhr.responseText);
+  }
+};
+xhr.send();
+```
+
+当我们一旦在服务器端设置了允许任何源可以请求之后，其实请求是不安全的，并且要求客户端不能携带资源凭证（比如上文中的Cookie字段），浏览器端会报错。
+
+告诉我们Cookie字段是不安全的也不能被设置的，如果允许源为'*'的话也是不允许的。
+
+<font style="color:#4A4A4A;">CORS的好处</font>
+
++ 原理简单，容易配置，允许携带资源凭证
++ 仍可以用 `ajax`作为资源请求的方式
++ 可以动态设置多个源，通过判断，将`Allow-Origin`设置为当前源
+
+<font style="color:#4A4A4A;">CORS的局限性</font>
+
++ 只允许某一个源发起请求
++ 如多个源，还需要动态判断
+
+
+
+### 4. Proxy
+
+**Proxy**翻译为“代理”，是由webpack配置的一个插件，叫"webpack-dev-server"（只能在开发环境中使用）
+
+**Proxy**在webpack中的配置: 
+
+```javascript
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  mode: 'production',
+  entry: './src/main.js',
+  output: {...},
+  devServer: {
+    port: '3000',
+    compress: true,
+    open: true,
+    hot: true,
+    proxy: {
+      '/': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true
+      }
+    }
+  },
+  // 配置WEBPACK的插件
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: `./public/index.html`,
+      filename: `index.html`
+    })
+  ]
+};
+```
+
+<font style="color:#4A4A4A;">图解Proxy的原理</font>
+![22](/Users/lemonliu/Documents/lemonliu/Github/Bible/images/1619344416622-4804b291-23ab-4ece-821a-05ef68da52a2.png)
+
+**Proxy**代理其实相当于由`webpack-dev-server`配置在本地创建了一个port=3000的服务，利用`node`的中间层代理（分发）解决了浏览器的同源策略限制。
+
+但是它只能在**开发环境**下使用，因为`dev-server`只是一个`webpack`的一个插件；
+
+如果需要在生产环境下使用，需要我们配置`Nginx`反向代理服务器；
+
+另外如果是自己实现`node服务层代理`：无论是开发环境还是生产环境都可以处理（node中间层和客户端是同源，中间层帮助我们向服务器请求数据，再把数据返回给客户端）
+
+<font style="color:#4A4A4A;">Proxy的局限性</font>
+只能在本地开发阶段使用
+
+
+
+<font style="color:#3F3F3F;">配置Nginx反向代理</font>
+主要作为**生产环境**下跨域的解决方案。
+
+原理：利用Node中间层的分发机制，将请求的URL转向服务器端的地址
+
+配置反向代理
+
+```json
+server {
+ listen: 80;
+  server_name: 192.168.161.189;
+  loaction: {
+  proxy_pass http://127.0.0.1:1001; // 请求转向这个URL地址，服务器地址
+    root html;
+    index index.html;
+  }
+}
+```
+
+
+
+<font style="color:#3F3F3F;">POST MESSAGE</font>
+假设现在有两个页面，分别为A页面`port=1001`、B页面`port=1002`，实现页面A与页面B的页面通信（跨域）
+
+原理：
+
++ 把 B页面当做A的子页面嵌入到A页面里，通过`iframe.contentWindow.postMessage`向B页面传递某些信息
++ 在A页面中通过`window.onmessage`获取A页面传递过来的信息`ev.data`(见下代码)
++ 同理在B页面中通过`ev.source.postMessage`向A页面传递信息
++ 在A页面中通过`window.onmessage`获取B页面传递的信息
+
+主要利用内置的`postMessage`和`onmessage`传递信息和接收信息。
+
+A.html
+
+```html
+// 把 B页面当做A的子页面嵌入到A页面里
+<iframe id="iframe" src="http://127.0.0.1:1002/B.html" frameborder="0" style="display: none;"></iframe>
+<script>
+  iframe.onload = function () {
+    iframe.contentWindow.postMessage('珠峰培训', 'http://127.0.0.1:1002/');
+  }
+  //=>监听B传递的信息
+  window.onmessage = function (ev) {
+    console.log(ev.data);
+  }
+</script>
+```
+
+B.html
+
+```html
+<script>
+  //=>监听A发送过来的信息
+  window.onmessage = function (ev) {
+    // console.log(ev.data);
+    //=>ev.source:A
+    ev.source.postMessage(ev.data + '@@@', '*');
+  }
+</script>
+```
+
+
+
+
+
+## 前端关闭浏览器自动翻译功能
+
+前端显示用户的英文username，浏览器如果开启了自动翻译功能可能会显示与中文名不符，引起用户歧义
+
+```html
+<html lang="en" translate="no">
+```
+
+
+
+## 从Performance看浏览器渲染流程
+
+在国内搜索浏览器渲染流程相关概念结论大同小异，深入原理的文章更是少的可怜。我从几个线上常见的现象出发，结合自己写的一些 demo 来反推浏览器渲染相关原理，如果你认为哪里有问题或者有任何建议欢迎来找我探讨。
+
+
+
+### 资源在浏览器中的生命周期
+
+看其他人博客都会提到下面几个概念，看着看着就晕了，所以我们先来搞清楚这几个概念
+
+**加载 - load**
+
+资源从服务端请求到本地的过程
+
+**解析 - parse**
+
+Parser is that phase of compiler which takes token string as input and with the help of existing grammar, converts it into the corresponding parse tree. Parser is alse known as Syntax Analyzer.
+
+**评估，计算 - evaluate**
+
+Load the code into memory.
+
+**执行 - execute**
+
+发生在 evaluate 之后
+
+
+
+### 前端资源加载流程
+
+![img](./images/1631242063823-83b3a82c-79b2-4e10-91ca-4d9e5f93663c.png)
+
+上图是浏览器解析资源的理想模型，实际上浏览器为了加载还进行了很多复杂的处理，下面一点点的分析
+
+#### \<script>的执行 依赖它上面的CSS加载
+
+或者说 css 的加载 会阻塞 \<script> 的执行
+
+```javascript
+// server.js
+app.get("/a.js", (req, res) => {
+  setTimeout(() => {
+    res.sendFile(path.resolve("./a.js"));
+  }, 2000);
+});
+
+app.get("/a.css", (req, res) => {
+    setTimeout(() => {
+      res.sendFile(path.resolve("./a.css"));
+    }, 4000)
+});
+<!-- index.html -->
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/a.css" />
+</head>
+<body>
+  我是测试
+  <script src="/a.js"></script>
+</body>
+// a.js
+console.log('a');
+// a.css
+body {
+    height: 100px;
+    background-color: red;
+}
+```
+
+现象：*浏览器在 4s 后出来* 我是测试 、 红色背景以及控制台的打印 a，Network中，a.js的加载在 2s 后完成
+
+从现象得出： **css 的加载会阻塞 js 的运行**。我猜测 js 可能会去获取或改变元素的样式，浏览器为了不重复渲染会等待所有的 css 加载渲染完成后再执行 js。从 a.js 加载在 2s 时完成可以得出结论：**同步资源的加载不会受其他资源的加载或者位置的影响**， a.js a.css 在 html 的位置不同，加载时间也不同，但是在浏览器中却是接近于并发请求的资源。查阅资料发现：浏览器在得到 html 文件之后会对整个文件进行预扫描，将 html 文件所依赖的资源同时请求加载。
+
+
+
+#### \<script>标签会阻塞 DOM 解析和渲染
+
+<script> 的 加载、解析和执行都会阻塞 DOM 的解析和渲染。从客观分析是： js 可以操作 DOM，浏览器为了防止渲染过程出现不可预期的结果，让 GUI 渲染线程和 JS 引擎线程互斥，即解析器在遇到 <script> 标记会立即加载、解析执行脚本，文档的解析将停止，直到脚本执行完毕
+
+```html
+<html>
+<head>
+    <tilte>title</title>
+</head>
+<body>
+    <!-- 不管inline或引入的script获取此标签之后的元素是获取不到的 -->
+    <script>
+        let div = document.querySelector('div');
+        console.log(div); // null
+    </script>
+    <div>
+        i am content.
+    </div>
+</body>
+</html>
+```
+
+渲染在 DOM 解析之后，毋庸置疑也会阻塞页面的渲染。
+
+
+
+#### 外链 \<script> 会触发页面的 Paint
+
+学习前端基础的时候，总是有人告诉我要将 \<script> 标签写在最下面，这里浏览器做了些什么优化呢？
+
+```html
+<!-- index.html -->
+<body>
+    我是外链 script 上面的内容
+    <!-- a.js 同步执行时间较长 大概4s -->
+    <script src="/a.js"></script>
+    我是外链 script 下面的内容
+</body>
+// a.js
+console.log(new Date().getTime());
+for (let i = 0; i < 5000000000; i++) {
+  let a = i;
+}
+console.log(new Date().getTime());
+```
+
+现象：*页面上一开始就会出现* 我是外链 script 上面的内容，过了大概 4s 后出现 我是外链 script 下面的内容
+
+虽然 \<script> 会阻塞页面的渲染，但也不是非要等到 所有的 js 加载执行完才渲染，否则用户等待时间太长了。浏览器的设计肯定会让用户尽早看到页面，所以在遇到 \<script> 标签时，会触发一次 Paint，**将 \<script> 标签之前的元素渲染出来**
+
+但也不是所有的 \<script> 会触发 Paint。
+
+**\<head> 中的 \<script> 不会触发 Paint**
+
+此时 \<body> 还没有解析，触发绘制也看不到任何内容
+
+**任何位置 inline 的 \<script> 也不会触发 Paint**
+
+```html
+<!-- index.html -->
+<body>
+  我是inline script 上面的内容
+  <!-- a.js 同步执行时间较长 大概4s -->
+  <script>
+    console.log(new Date().getTime());
+    for (let i = 0; i < 5000000000; i++) {
+      let a = i;
+    }
+    console.log(new Date().getTime());
+  </script>
+  我是inline script 下面的内容
+</body>
+<!-- index.html -->
+<body>
+  我是inline script 上面的内容
+</body>
+</html>
+<script>
+  console.log(new Date().getTime());
+  for (let i = 0; i < 5000000000; i++) {
+    let a = i;
+  }
+  console.log(new Date().getTime());
+</script>
+```
+
+浏览器等待大概 **4s** 之后浏览器才会渲染出内容，无论他在何处
+
+
+
+#### \<link> 标签不会阻塞 DOM 解析但会阻塞 DOM 渲染
+
+DOM的解析和CSSOM的解析是一个并行的过程。两者互不影响。两者解析完成之后，会合并生成render tree，之后就是layout和paint阶段，渲染到页面中。
+
+```html
+<!-- index.html -->
+<html>
+  <head>
+    <title>title</title>
+    <script>
+      setTimeout(() => {
+        console.log(document.querySelectorAll("div"));
+      }, 1000);
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("dom parse done");
+      });
+    </script>
+    <link rel="stylesheet" href="/a.css" />
+  </head>
+  <body>
+    <div>i am content a.</div>
+    <div>i am content b.</div>
+  </body>
+</html>
+```
+
+结果如下图
+
+![img](./images/1631242063220-83ae4702-9653-4c89-b333-7750cdbbea81.png)
+
+页面未渲染出 div 之前能够打印出 该值。<link> 标签不会像 <script> 标签一样触发页面绘制，浏览器时并行解析生成 DOM Tree 和 CSSOM Tree，当两者都解析完成才会生成 render tree，页面才会渲染，所以应尽量减少首屏样式文件大小，提高首屏展示速度。
+
+
+
+### 浏览器性能指标
+
+![img](./images/1631242071505-077044b6-8003-4adf-a96a-adb009f7f064.png)
+
+上图是 浏览器 performance API，将这些 API 相减就能得出反映浏览器的性能指标
+
+#### FP(First Paint)
+
+浏览器第一次渲染，在 FP 之前都是白屏，在有外链 <script> 的文档中为 第一次 Paint 的时间。
+
+
+
+#### DCL(domContentLoaded)
+
+The DOMContentLoaded event fires when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading. ——MDN
+
+**DCL事件发生在整个 DOM 解析完成，不会等待样式表、图片和子框架的加载**
+
+这里没有提 JS 的问题，这个可以从上面的结论推断出来。DOM 在解析时碰到 <script> 标签会停止解析，当 DOM 解析完成之后，<script> 已经完成了执行。整体前端资源加载流程就是 **DOM 解析依赖 <script> ，<script> 的执行依赖 <link>**。
+
+
+
+**DCL 事件的意义**
+
+domContentLoadedEventStart 发生在 domInteractive(DOM 结构结束解析)，此时*文档中的同步 js 以及附带的 微任务 都已经执行完成*，可以拿到 DOM 节点做一些操作，如
+
+```javascript
+document.addEventListener('DOMContentLoaded', function(){})。
+```
+
+domContentLoadedEventEnd 发生时浏览器会去检查线程中是否存在加载中的资源，如果有的话就去加载，这些资源加载完成才会 domComplete(DOM 和资源解析完毕)，**如果在同步 js 执行中的异步资源任务等待时间小于它后面 同步 js 的执行时间，那么这个异步资源也会被记录到资源加载耗时。**
+
+
+
+**DCL 有时会等待样式表的加载**
+
+我们先来看存在 \<link> 标签和 \<script> 标签的情况(一个4s、一个2s)，performace 面板如下
+
+![img](./images/1631242063924-003561f4-4ce3-4de8-b6d9-c9f4af18c87f.png)
+
+可以看出，DCL 事件发生在了 css样式表完全加载之后
+
+DOMContentLoaded doesn’t wait for stylesheets to load *provided that* no scripts are placed after the stylesheet reference, \<link rel="stylesheet">. This is valid for all browsers supporting DOMContentLoaded. —— [molily](https://molily.de/)[DOMContentLoaded and stylesheets](https://molily.de/domcontentloaded/)
+
+所以我尝试了一下 \<link> 标签下没有 \<script>，performance 面板如下
+
+![img](./images/1631242070140-d5575b98-c60e-45b4-b8c5-09d8c58f4843.png)
+
+所以得出结论：**MDN 上的不会等待样式表指的是 此样式表下没有任何脚本的情况**
+
+这也佐证了 *\<link> 标签是不会阻塞 DOM 解析但会阻塞 DOM 渲染*。浏览器遇到 \<link> 标签就加载，同时解析 DOM，DOM 解析完成，DCL 触发，此时页面中并没有内容，直到 CSS 加载完成之后生成 CSSOM 与 DOM 结合生成 render tree，页面中出现内容。如果存在了 \<script> 标签了呢？*\<script> 标签会阻塞 DOM 解析*，\<script> 执行又依赖 css 的加载，所以只能等到 css 加载完成，js执行了，DOM 才能解析完成。
+
+
+
+#### L(loadEvent)
+
+Load event gets completed once all the components i.e. DOM hierarchy along with associated features of a webpage such as CSS files, JavaScript files, images/pictures, and external links are loaded. So basically, the load event helps in knowing when the page has fully-loaded.
+
+**loadEventStart 事件开始是所有资源完成加载的时间**
+
+loadEventEnd 事件在 onLoad 的同步代码执行完成后会触发，在 onLoad 中代码执行时间太长也是会影响指标。
+
+```html
+<!-- index.html -->
+<html>
+  <head>
+    <title>title</title>
+  </head>
+  <body>
+    <div>i am content a.</div>
+    <div>i am content b.</div>
+  </body>
+</html>
+<script src="/a.js"></script>
+// a.js
+function onLoad(cb) {
+  if (document.readyState === "complete") {
+    cb();
+  } else {
+    window.addEventListener("load", cb);
+  }
+}
+onLoad(() => {
+  console.log(new Date().getTime());
+  for (let i = 0; i < 5000000000; i++) {
+    let a = i;
+  }
+  console.log(new Date().getTime());
+});
+```
+
+上述代码的 performance 面板如下
+
+![img](./images/1631242071274-1b76626c-5109-4e1d-b94e-69f64988fc38.png)
+
+
+
+### 结论
+
+#### 资源数据指标和用户视觉感知并不对等
+
+如果异步资源特别大，但同步 js 执行时间大于异步资源开始加载时间，此时的 「资源加载时间」就会很长，用户却早早就可以操作了。
+
+如果
+
+我们应该减少第一次同步 js 的执行时间来尽量避免这个问题，比如减少首屏 DOM 的挂载、尽量避免 长列表for循环和递归等等
+
+#### 提升网站速度方法
+
+- 减少首屏 css 和 js 加载时间(可以通过 Webpack 分包、路由懒加载、资源压缩等等方式)
+- 减少首屏 js 的同步执行时间(主要是 for 循环阻塞线程)
+
+将 CSS 放在文件头部，JavaScript 文件放在底部
+
+- 如果 css 放在文件中部或者底部，遇到 \<link> 标签渲染无样式的页面，加载完 css 又重新渲染有样式的页面，浏览器会两次渲染。同时用户在第一次感知是"丑陋的"。Javascript 放在底部可以让用户先看到页面，避免长时间白屏
+
+#### 用户视觉层面的浏览器渲染
+
+- 白屏：*加载 html* => *扫描 html 内容* => *将 css 与 js 同时加载* => *css 与 html 同时解析* => *遇到外链 \<script>*
+- 预渲染/默认内容：*遇到外链 \<script> 触发绘制* => *解析执行js* => *初始化并调用实例* => 初始化数据生成虚拟 DOM 
+- Loading/无数据页面：*调用 render 重新构建DOM并渲染* => *向后端请求数据*
+- 最终页面：*数据到达前端并渲染*
+
+
+
+## Script标签中的async和defer
+
+script标签用于加载脚本与执行脚本，在前端开发中可以说是非常重要的标签了。
+
+直接使用script脚本的话，html会按照顺序来加载并执行脚本，在脚本加载&执行的过程中，会阻塞后续的DOM渲染。
+
+
+
+现在大家习惯于在页面中引用各种的第三方脚本，如果第三方服务商出现了一些小问题，比如延迟之类的，就会使得页面白屏。
+
+好在script提供了两种方式来解决上述问题，async和defer，这两个属性使得script都不会阻塞DOM的渲染。
+
+但既然会存在两个属性，那么就说明，这两个属性之间肯定是有差异的。
+
+
+
+### 普通Script
+文档解析的过程中，如果遇到script脚本，就会停止页面的解析进行下载（但是Chrome会做一个优化，如果遇到script脚本，会快速的查看后边有没有需要下载其他资源的，如果有的话，会先下载那些资源，然后再进行下载script所对应的资源，这样能够节省一部分下载的时间 ）。
+
+资源的下载是在解析过程中进行的，虽说script1脚本会很快的加载完毕，但是他前边的script2并没有加载&执行，所以他只能处于一个挂起的状态，等待script2执行完毕后再执行。
+
+当这两个脚本都执行完毕后，才会继续解析页面
+
+![11](./images/1619453108178-b28fcf68-116d-45ab-9d00-1f9da9c95350.png)
+
+### Defer
+如果script标签设置了该属性，则浏览器会异步的下载该文件并且不会影响到后续DOM的渲染；
+
+如果有多个设置了defer的script标签存在，则会按照顺序执行所有的script；
+
+defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行。
+
+文档解析时，遇到设置了defer的脚本，就会在后台进行下载，但是并不会阻止文档的渲染，当页面解析&渲染完毕后。
+
+会等到所有的defer脚本加载完毕并按照顺序执行，执行完毕后会触发DOMContentLoaded事件。
+
+![22](./images/1619453137643-e73f411f-f760-45b2-bc53-735d275edd06.png)
+
+
+
+### Async
+async的设置，会使得script脚本异步的加载并在允许的情况下执行
+
+async的执行，并不会按着script在页面中的顺序来执行，而是谁先加载完谁执行。
+
+async脚本会在加载完毕后执行。
+
+async脚本的加载不计入DOMContentLoaded事件统计，也就是说下图两种情况都是有可能发生的
+
+![33](./images/1619453213966-1bde76f6-054f-439d-b93a-c03f64e384a4.png)
+
+![44](./images/1619453225324-b3466ed7-9698-4063-b42a-ee51fc09d3c0.png)
+
+### 推荐的应用场景
+#### defer
+如果你的脚本代码依赖于页面中的DOM元素（文档是否解析完毕），或者被其他脚本文件依赖。
+
+例：
+
++ 评论框
++ 代码语法高亮
++ polyfill.js
+
+#### async
+如果你的脚本并不关心页面中的DOM元素（文档是否解析完毕），并且也不会产生其他脚本需要的数据。
+
+例：
+
++ 百度统计
+
+
+
+## 实现一个可以任意扩展接口的服务器，且能上传文件和文件下载
+
+### 探究原理
+
+下面以文件上传为何需要使用 POST 请求、指定上传格式、后端如何接收等等展开
+
+
+
+**为何是 POST 而不是 GET？**
+
+由于客户端上传的文件大小是不确定的，所以 HTTP 协议规定，文件上传的数据要存放于请求正文中，而不能出现在 URL 的地址栏中，因为地址栏中可以存放的数据量太小(一般不超过2K)
+
+
+
+**POST 请求主体类型？**
+
+引入 MDN 上概念：
+
+**HTTP** `**POST**` **方法** 发送数据给服务器. 请求主体的类型由 `Content-Type` 首部指定.
+
+PUT 和`POST`方法的区别是,PUT方法是幂等的：连续调用一次或者多次的效果相同（无副作用）。连续调用同一个POST可能会带来额外的影响，比如多次提交订单。
+
+一个 `POST` 请求通常是通过 [HTML 表单](https://developer.mozilla.org/en-US/docs/Learn/Forms)发送, 并返回服务器的修改结果. 在这种情况下, content type 是通过在 `<form>` 元素中设置正确的 `enctype` 属性, 或是在 `<input>` 和 `<button>` 元素中设置 `formenctype` 属性来选择的:
+
+- `application/``x-www-form-urlencoded`: 数据被编码成以 `'&'` 分隔的键-值对, 同时以 `'='` 分隔键和值. 非字母或数字的字符会被 [percent-encoding](https://developer.mozilla.org/zh-CN/docs/Glossary/percent-encoding): 这也就是为什么这种类型不支持二进制数据(应使用 `multipart/form-data` 代替).
+- `multipart/form-data`
+- `text/plain`
+
+当 POST 请求是通过除 HTML 表单之外的方式发送时, 例如使用 `XMLHttpRequest`, 那么请求主体可以是任何类型.
+
+文件上传要求客户端表单提交特殊的请求——mutipart请求，即包含多部分数据的请求。所以文件上传表单对于表单数据的编码类型要求必须为 mutipart/form-data，即指定 form 表单的 enctype(encoding type)
+
+
+
+使用默认的 `application/x-www-form-urlencoded` 做为 content type 的简单表单:
+
+```json
+POST / HTTP/1.1
+Host: foo.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 13
+
+say=Hi&to=Mom
+```
+
+使用 `multipart/form-data` 作为 content type 的表单:
+
+```json
+POST /test.html HTTP/1.1
+Host: example.org
+Content-Type: multipart/form-data;boundary="boundary"
+
+--boundary
+Content-Disposition: form-data; name="field1"
+
+value1
+--boundary
+Content-Disposition: form-data; name="field2"; filename="example.txt"
+
+value2
+```
+
+**后端是如何接收到这些数据的？**
+
+这里使用简易的 Express 搭建服务，如下：
+
+```javascript
+const express = require('express');
+const path = require('path');
+
+const app = express();
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve('./public/index.html'))
+})
+
+app.post('/upload', (req, res) => {
+    let str = ''
+    req.on('data',chunk => {
+        console.log(chunk)
+        str += chunk
+    })
+    req.on('end', () => {
+        res.send(str)
+    })
+})
+
+app.listen(3000, () => {
+    console.log('server is running at http://localhost:3000');
+})
+```
+
+上述代码中有两个重要的变量—— chunk 和 str
+
+chunk 为代码块，因为 POST 请求整体采用二进制流的方式发送数据，我们无法直接拿到，只能通过监听 req 请求体的 data 事件(数据开始流入时触发)和 end 事件(数据停止流入时触发)才可以获取到请求数据，chunk 代码块为 Buffer 格式数据：
+
+```javascript
+<Buffer 75 73 65 72 3d 7a 73 26 70 77 64 3d 31 32 33>
+```
+
+如果只需要获取文本信息，可以定义一个 str 将所有的 chunk 拼接起来
+
+关于`multipart/form-data`也是大致一样的思路，只不过解析规则有些不同
+
+
+
+### 文件上传方式
+
+关于文件上传我这里大概有三个方式，第一个 form 表单上述已经大致解释明白了，因为这个方式基本被废弃，这里不再赘述
+
+
+
+#### Base64
+
+服务器: 接收到客户端传递的base64信息，把base64转换为具体的文件存储并返回客户端存储的文件地址
+
+
+
+**前端**
+
+ajax 方便后面代码的通用性，这里用原生 XMLHttpRequest 做一层简单的封装来发送请求
+
+```javascript
+// request.js
+var request = ({
+    url,
+    method = "post",
+    data,
+    headers = {},
+    requestList
+}) => {
+    return new Promise(resolve => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        Object.keys(headers).forEach(key =>
+            xhr.setRequestHeader(key, headers[key])
+        );
+        xhr.send(data);
+        xhr.onload = e => {
+            let data;
+            try {
+                data = JSON.parse(e.target.response)
+            } catch (error) {
+                data.e.target.response
+            }
+            resolve({
+                data
+            });
+        };
+    });
+}
+```
+
+主要的上传逻辑
+
+```html
+<body>
+    <input type="file" id="fileInp"><br/>
+    <img id="serverImg">
+</body>
+</html>
+<script src="./request.js"></script>
+<script>
+    // 封装生成base64格式的方法
+    function changeFile(file) {
+        return new Promise((resolve, reject) => {
+            let readFile = new FileReader()
+            readFile.readAsDataURL(file)
+            readFile.onload = ev => {
+                resolve(ev.target.result)
+            }
+        })
+    }
+    fileInp.onchange = async function () {
+        // 获取上传的文件对象
+        const file = fileInp.files[0]
+        // 生成 base64
+        const result = await changeFile(file)
+        // 将 base64 传给后端
+        const res = await request({
+            url: '/upload',
+            method: 'post',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            // 防止乱码
+            data: `chunk=${encodeURIComponent(result)}&filename=${file.name}`
+        })
+        if (res.data.code === 0) {
+            serverImg.src = res.data.path    
+        }
+    }
+</script>
+```
+
+
+
+**后端**
+
+考虑到文件名重复会对服务器文件存储造成一定影响，这里封装了一个 uglyFilename 来生成唯一文件名
+
+```javascript
+module.exports = (filename) => {
+    // 最后一个点的在文件名的下标
+    let dotIndex = filename.lastIndexOf('.'),
+    // 文件名称
+    name = filename.substring(0,dotIndex),
+    // 文件后缀
+    suffix = filename.substring(dotIndex+1);
+    // md5加密文件名称并且加入时间戳实现唯一值
+    name = require('crypto').createHash('md5').update(name).digest('hex')+new Date().getTime()
+    // 返回加密后的文件名
+    return `${name}.${suffix}`
+}
+```
+
+413 Request Entity Too Large
+
+上传数据时，报了一个 413 的错误，查了资料是因为 nginx 或者服务器对文件传输大小有限制，我这里没有使用 nginx，所以在解析 POST 请求体数据的部分加了个 limit 配置
+
+```javascript
+app.use(express.json()); // 解析json数据
+app.use(express.urlencoded({extended: true, limit: '50mb'})); // 解析表单数据
+```
+
+上传接口
+
+```javascript
+app.post('/upload', (req, res) => {
+    const {
+        chunk,
+        filename
+    } = req.body;
+    // md5加密无序化文件名
+    let uglyFilename = uglifyFilename(filename)
+    // 文件存储路径
+    const chunkPath = path.join('./public', uglyFilename)
+    // 正则替换声明头
+    chunk = decodeURIComponent(chunk).replace(/^data:image\/\w+;base64,/, '')
+    // 将base64转成buffer数据
+    chunk = Buffer.from(chunk, 'base64')
+    // 将buffer数据写入文件
+    fs.writeFileSync(chunkPath, chunk)
+    res.send({
+        code: 0,
+        msg: '上传成功',
+        path: `http://localhost:3000/${uglyFilename}`
+    })
+})
+```
+
+从上面可以看出，这种转成 base64 的方式，对于图片上传还可以，对于其他文件的上传就无意义了
+
+
+
+#### FormData
+
+服务器: 接收到客户端传递的文件信息，创建文件并返回客户端存储的文件地址
+
+
+
+**前端**
+
+思路和上面 Base64 相差不大，加了一些常用的限制
+
+```html
+<body>
+    <!-- 非图片类型的文件变灰无法被点击 -->
+    <input type="file" id="fileInp" accept="image/*">
+    <br>
+    <img id="serverImg">
+</body>
+</html>
+<script src="./request.js"></script>
+<script>
+    const limitType = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+    const limitMax = 100 * 1024;
+    // 监听文件输入框的变化
+    fileInp.onchange = async function () {
+        // 获取文件对象
+        let file = fileInp.files[0];
+        // 排除上传非文件
+        if (!file) return;
+        // 限制上传类型mime type
+        if (!limitType.includes(file.type)) {
+            alert('不支持的上传格式！')
+            fileInp.value = '';
+            return
+        }
+        // 限制上传大小
+        if (file.size > limitMax) {
+            alert('最大只能上传100KB')
+            fileInp.value = '';
+            return
+        }
+        // 通过FormData类创建一个空对象
+        let formData = new FormData()
+        // 默认Content-Type: multipart/form-data
+        // 通过append()方法来追加数据
+        formData.append('chunk', file);
+        console.log(formData)
+        // 发送文件信息
+        let res = await request({
+            url: '/upload',
+            method: 'POST',
+            data: formData
+        })
+        if (res.data.code === 0) {
+            serverImg.src = res.data.path
+        }
+    }
+</script>
+```
+
+
+
+**后端**
+
+- 这里回顾下上面的 content-type 为`multipart/form-data`发送到服务端的数据格式：
+
+```javascript
+------WebKitFormBoundaryL5AGcit70yhKB92Y
+Content-Disposition: form-data; name="username"
+
+lee
+------WebKitFormBoundaryL5AGcit70yhKB92Y
+Content-Disposition: form-data; name="password"
+
+123456
+Content-Disposition: form-data; name="file"; filename="upload.txt"
+Content-Type: text/plain
+
+upload
+------WebKitFormBoundaryL5AGcit70yhKB92Y--
+```
+
+- 分析
+
+1. 表单上传的数据，被分隔符"------WebKitFormBoundaryL5AGcit70yhKB92Y"隔开，分隔符在每次上传时都不同。分隔符数据可以从 `req.headers['content-type']` 中获取，如：
+
+```javascript
+const contentType = req.headers['content-type']; // multipart/form-data; boundary=----WebKitFormBoundaryL5AGcit70yhKB92Y
+const boundary = '--' + contentType.split('; ')[1].split('=')[1] // ------WebKitFormBoundaryL5AGcit70yhKB92Y
+```
+
+1. 前两段数据中，分别可以获取到表单上传的字段名name="username"，以及数据"lee"
+2. 第三段数据中，多了一个字段filename="upload.txt"，它表示的是文件的原始名称，以及可以获取到文件类型"Content-Type:text/plain"，表示这是一个文本文件，最后是文件的内容"upload"
+
+由此可以看出，文件上传数据虽然有些乱，但还是有规律的，那么处理思路就是按照规律，将数据切割之后，取出其中有用的部分
+
+
+
+- 上传数据结构分析
+
+将上面数据的回车符标记出来：
+
+```javascript
+------WebKitFormBoundaryL5AGcit70yhKB92Y\r\n
+Content-Disposition: form-data; name="username"\r\n
+\r\n
+lee\r\n
+------WebKitFormBoundaryL5AGcit70yhKB92Y\r\n
+Content-Disposition: form-data; name="password"\r\n
+\r\n
+123456\r\n
+Content-Disposition: form-data; name="file"; filename="upload.txt"\r\n
+Content-Type: text/plain\r\n
+\r\n
+upload\r\n
+------WebKitFormBoundaryL5AGcit70yhKB92Y--
+```
+
+可以看出，每段数据的结构是这样的：
+
+```javascript
+------WebKitFormBoundaryL5AGcit70yhKB92Y\r\nContent-Disposition: form-data; name="username"\r\n\r\nlee\r\n
+```
+
+将每段上传数据简化如下：
+
+```javascript
+<分隔符>\r\n字段头\r\n\r\n内容\r\n
+```
+
+也就是说，整个表单的数据，就是按照这样的数据格式组装而成
+
+需要注意的是，在表单数据的结尾不再是\r\n，而是"--"
+
+
+
+- 上传数据处理步骤
+
+1. 用分隔符切分数据
+
+```json
+[
+  ‘’,
+  "\r\n字段信息\r\n\r\n内容\r\n",
+  "\r\n字段信息\r\n\r\n内容\r\n",
+  "\r\n字段信息\r\n\r\n内容\r\n",
+  '--'
+]
+```
+
+1. 删除数组头尾数据：
+
+```json
+[
+  "\r\n字段信息\r\n\r\n内容\r\n",
+  "\r\n字段信息\r\n\r\n内容\r\n",
+  "\r\n字段信息\r\n\r\n内容\r\n",
+]
+```
+
+1. 将每一项数据头尾的的\r\n删除：
+
+```json
+[
+  "字段信息\r\n\r\n内容",
+  "字段信息\r\n\r\n内容",
+  "字段信息\r\n\r\n内容",
+]
+```
+
+1. 将每一项数据中间的\r\n\r\n删除，得到最终结果：
+
+```json
+[
+	"字段信息", "内容",
+	"字段信息", "内容",
+	"字段信息", "内容",
+]
+```
+
+
+
+- Buffer 数据处理
+
+由于文件都是二进制数据，不能直接将其转换为字符串后再进行处理，否则数据会出错，因此要通过Buffer模块进行数据处理操作
+
+Buffer模块提供了indexOf方法获取Buffer数据中，其参数所在位置的index值
+
+Buffer模块提供了slice方法，可通过index值切分Buffer数据
+
+测试Buffer
+
+```javascript
+const buffer = Buffer.from('lee\r\nchen\r\ntest')
+const index = buffer.indexOf('\r\n')
+console.log(index) // 3
+console.log(buffer.slice(0, index).toString()) // 'lee'
+```
+
+由此可以封装一个专门用于切割Buffer数据的方法：
+
+```javascript
+module.exports = function bufferSplit(buffer, separator) {
+  let result = [];
+  let index = 0;
+
+  while ((index = buffer.indexOf(separator)) != -1) {
+    result.push(buffer.slice(0, index));
+    buffer = buffer.slice(index + separator.length);
+  }
+  result.push(buffer);
+
+  return result;
+}
+```
+
+- 文件上传数据处理
+
+show code!
+
+```javascript
+app.post('/upload', async (req, res) => {
+    const contentType = req.headers['content-type']
+    const boundary = '--' + contentType.split('; ')[1].split('=')[1]
+    const arr = [];
+    const buffer = await new Promise(resolve => {
+        req.on('data', chunk => {
+            arr.push(chunk)
+        })
+        req.on('end', () => {
+            resolve(Buffer.concat(arr))
+        })
+    })
+    console.log(buffer.toString())
+
+    // 1. 用<分隔符>切分数据
+    let result = bufferSplit(buffer, boundary)
+    console.log(result.map(item => item.toString()))
+
+    // 2. 删除数组头尾数据
+    result.pop()
+    result.shift()
+    console.log(result.map(item => item.toString()))
+
+    // 3. 将每一项数据中间的\r\n\r\n删除，得到最终结果
+    result = result.map(item => item.slice(2, item.length - 2))
+    console.log(result.map(item => item.toString()))
+
+    // 4. 将每一项数据中间的\r\n\r\n删除，得到最终结果
+    result.forEach(item => {
+        let [info, data] = bufferSplit(item, '\r\n\r\n')
+
+        // info为字段信息，这是字符串类型数据，直接转换成字符串，若为文件信息，则数据中含有一个回车符\r\n，可以据此判断数据为文件还是为普通数据
+        info = info.toString()
+
+        // 若为文件信息，则将Buffer转为文件保存
+        if (info.indexOf('\r\n') >=0) {
+            // 获取字段名 name=file
+            let infoResult = info.split('\r\n')[0].split('; ')
+            let name = infoResult[1].split('=')[1]
+            name = name.substring(1, name.length - 1)
+            // 获取文件名 filename="upload.txt"
+            let filename = infoResult[2].split('=')[1]
+            filename = filename.substring(1, filename.length - 1)
+            console.log(name)
+            console.log(filename)
+            // 将文件存储到服务器
+            fs.writeFileSync(path.resolve(`./public/${filename}`), data)
+        } else {
+            // 若为数据，则直接获取字段名称和值
+            let name = info.split('; ')[1].split('=')[1]
+            name = name.substring(1, name.length - 1)
+            const value = data.toString()
+            console.log(name, value, '#####')
+        }
+    })
+})
+```
+
+- 使用第三方库——multiparty
+
+虽然我们完成了完整的文件上传流程，但是实际工作中不可能自己从头开发所有功能，效率低并且通用型差
+
+下面的代码可以测试下multiparty的功能
+
+它会在field事件中，将数据信息的字段名和值返回，在file事件中，将文件的字段名和信息返回
+
+上传成功后，会在指定的文件夹创建一个上传的文件，并会将文件重命名（如：IqUHkFe0u2h2TsiBztjKxoBR.jpg），以防止重名
+
+若上传出现失败，已保存的文件会自动删除
+
+close事件表示表单数据全部解析完成，用户可以在其中处理已经接收到的信息
+
+不过我在使用中发现这个指定文件夹好像不可以配置，我还得将目标文件拷贝一份到我指定目录并删除源文件
+
+示例代码
+
+```javascript
+const form = new multiparty.Form({
+  uploadDir: './upload' // 指定文件存储目录
+})
+form.parse(req) // 将请求参数传入，multiparty会进行相应处理
+
+form.on('field', (name, value) => { // 接收到数据参数时，触发field事件
+  console.log(name, value)
+ })
+
+form.on('file', (name, file, ...rest) => { // 接收到文件参数时，触发file事件
+  console.log(name, file)
+})
+
+form.on('close', () => {  // 表单数据解析完成，触发close事件
+  console.log('表单数据解析完成')
+})
+```
+
+实际项目中使用
+
+```javascript
+app.post('/upload2', (req, res) => {
+    // 实例化Form
+    let form = new multiparty.Form()
+    // 设置单文件大小限制
+    // form.maxFilesSize = 2 * 1024 * 1024;
+    // 解析二进制流
+    form.parse(req, function (err, fields, file) {
+        // 处理错误
+        if (err) {
+            res.send({
+                code: 1,
+                err
+            })
+            return
+        }
+        // 得到上传文件信息
+        const chunk = file.chunk[0]
+        // md5加密无序化文件名
+        let uglyFilename = uglifyFilename(chunk.originalFilename)
+        // 文件的存放目录
+        const chunkPath = path.join('./public', uglyFilename)
+        // 创建读取临时缓存区的文件流
+        let rs = fs.createReadStream(chunk.path)
+        let ws = fs.createWriteStream(chunkPath)
+        rs.pipe(ws)
+        // 读取结束，删除缓存区文件，提高性能
+        rs.on('end', () => {
+            fs.unlinkSync(chunk.path)
+        })
+        res.send({
+            code: 0,
+            msg: '上传成功',
+            path: `http://localhost:3000/${uglyFilename}`
+        })
+    })
+})
+```
+
+
+
+### 切片上传
+
+HTTP可以并发传递**6—7**个请求
+
+
+
+#### 切片上传步骤
+
+1. 把大文件切片化（5个）
+   file是Blob的实例，Blob.prototype.silce可以把一个文件切片处理
+
+
+
+1. 同时并发五个切片的上传请求
+   /chunk 处理每一个切片的请求
+    chunk：文件切片
+    filename：切片的名字 ->文件名-索引.后缀
+   upload目录下创建一个以文件名命名的临时目录，把切片存储到这个目录下
+    xxxxx
+    xxxxx-0-png
+    xxxxx-1-png
+    ....
+
+
+
+1. 等5个切片都上传完，再向服务器发送一个合并切片的请求
+   /merge 合并
+    filename：文件名 文件名.后缀
+   根据文件名找到之前存储的临时目录，按顺序读取目录中的切片信息，把每一个切片信息合并起来（合并完记得删除临时目录和里面的切片即可）
+
+
+
+#### 上传进度条
+
+这里规定了一定会发送五个切片请求，所以给每一个请求*20即可，最终将所有数据存入数组
+
+监听进度的变化使用的 ajax 的 `upload.onprogress` 方法
+
+监听每个 item 进度变化使用的是 Proxy
+
+```javascript
+// 实例代理器修改进度
+let _data = new Proxy([], {
+    set(target, key, value) {
+        target[key] = value;
+        let sum = _data.reduce((prev, next) => {
+            return prev + next
+        }, 0)
+        if (sum >= 100) {
+            progress.innerHTML = '上传完成'
+            return
+        }
+        progress.innerHTML = `${sum}%`
+    }
+})
+```
+
+
+
+#### 前端代码
+
+```javascript
+<body>
+    <input type="file" id="fileInp"><span id="progress">0%</span>
+    <br>
+    <img id="serverImg">
+</body>
+
+</html>
+<script src="./request.js"></script>
+<script>
+    // 封装格式化文件名方法
+    function formatFilename(filename, i) {
+        // 最后一个点的在文件名的下标
+        let dotIndex = filename.lastIndexOf('.'),
+            // 文件名称
+            name = filename.substring(0, dotIndex),
+            // 文件后缀
+            suffix = filename.substring(dotIndex + 1);
+        name = `${name}-${i}`
+        // 返回加密后的文件名
+        return `${name}.${suffix}`
+    }
+    // 实例代理器修改进度
+    let _data = new Proxy([], {
+        set(target, key, value) {
+            target[key] = value;
+            let sum = _data.reduce((prev, next) => {
+                return prev + next
+            }, 0)
+            if (sum >= 100) {
+                progress.innerHTML = '上传完成'
+                return
+            }
+            progress.innerHTML = `${sum}%`
+        }
+    })
+    // 监听文件输入框的变化
+    fileInp.onchange = async function () {
+        // 获取文件对象
+        let file = fileInp.files[0];
+        // 把一个文件切成五个切片（固定切片数量，也可以固定切片大小）
+        let partSize = file.size / 5;
+        let cur = 0; // 当前的文件大小
+        let i = 0; // 当前切片的索引
+        let partList = []; //存放切片的数组
+
+        while (i < 5) {
+            partList.push({
+                chunk: file.slice(cur, cur + partSize),
+                filename: formatFilename(file.name, i)
+            });
+            cur += partSize;
+            i++;
+        }
+        // 并发切片请求
+        partList = partList.map(async (item, index) => {
+            let formData = new FormData()
+            formData.append('chunk', item.chunk);
+            formData.append('filename', item.filename);
+            let res = await request({
+                url: '/chunk',
+                method: 'POST',
+                data: formData,
+                onProgress: ev => {
+                    _data[index] = Math.round(ev.loaded / ev.total * 20)
+                }
+            })
+            if (res.data.code !== 0) return Promise.reject(res)
+            return Promise.resolve(res)
+        })
+        // 合并切片
+        await Promise.all(partList);
+        // 发送合并切片请求
+        let mergeRes = await request({
+            url: '/merge',
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                filename: file.name
+            })
+        })
+        if (mergeRes.data.code === 0) {
+            serverImg.src = mergeRes.data.path
+        }
+    }
+</script>
+```
+
+
+
+#### 后端
+
+核心逻辑和上面的无异，只是多了一层创建临时文件夹存储切片数据，而后删除的过程
+
+```javascript
+app.post('/chunk', (req, res) => {
+    let form = new multiparty.Form()
+    form.parse(req, function (err, fields, file) {
+        if (err) {
+            res.send({
+                code: 1,
+                err
+            })
+            return
+        }
+        // 上传切片信息
+        const chunk = file.chunk[0]
+        // 切片名称
+        const filename = fields.filename[0]
+        // 切片文件的文件夹名字
+        let fileDir = filename.substring(0, filename.lastIndexOf('-'))
+        // 切片存放的文件夹路径
+        let filePath = path.join('./temp', fileDir)
+        // 不存在文件夹 就创建
+        if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(filePath)
+        }
+        // 切片存储路径
+        let chunkPath = path.join('./temp', fileDir, filename)
+        // 创建读取临时缓存区的文件流
+        let rs = fs.createReadStream(chunk.path)
+        let ws = fs.createWriteStream(chunkPath)
+        rs.pipe(ws)
+        // 读取结束，删除缓存区文件，提高性能
+        rs.on('end', () => {
+            fs.unlinkSync(chunk.path)
+        })
+        res.send({
+            code: 0,
+            msg: '上传切片成功'
+        })
+    })
+})
+
+app.post('/merge', (req, res) => {
+    const uploadDir = path.resolve('./temp')
+    let {
+        filename
+    } = req.body;
+    // 切片存放的文件夹路径
+    let fileDir = `${uploadDir}/${filename.substring(0, filename.lastIndexOf('.'))}`
+    // md5加密无序化文件名
+    let uglyFilename = uglifyFilename(filename)
+    // 文件存储路径
+    let filePath = `${path.resolve('./public')}/${uglyFilename}`
+    // 读取文件夹
+    let pathList = fs.readdirSync(fileDir)
+    // 将切片排序遍历合并 合并完毕删除
+    pathList.sort((a, b) => a.localeCompare(b)).forEach(item => {
+        fs.appendFileSync(filePath, fs.readFileSync(path.join(uploadDir, filename.substring(0, filename.lastIndexOf('.')), item)))
+        fs.unlinkSync(path.join(fileDir, item))
+    })
+    // 删除存放切片的空文件夹
+    fs.rmdirSync(fileDir)
+    res.send({
+        code: 0,
+        msg: '合并切片成功',
+        path: `http://localhost:3000/${uglyFilename}`
+    })
+})
+```
+
+
+
+### 断点续传
+
+断点续传难点
+
+- 在于前端/服务端记住已上传的切片。这样下次上传就可以跳过之前已上传的部分
+- 维持浏览器最大连接数，服务器储存已经上传的切片
+
+
+
+### 生成Hash
+
+对于文件的验证使用的是 `文件名 + 切片下标` 作为文件的 hash，这样前端文件名一旦修改就失去了效果，而事实上只要文件内容不变，hash 就不应该变化，所以这里我们改变之前的方案， 根据文件内容生成 hash
+
+对于前后端比较匹配的项目，前端使用 web-worker 的 worker 线程或者后端做都可以完成，这里使用后端处理，解放前端
+
+```javascript
+var crypto = require('crypto');
+var fs = require('fs');
+
+//读取一个Buffer
+var buffer = fs.readFileSync('./mindpush.apk');
+var fsHash = crypto.createHash('md5');
+
+fsHash.update(buffer);
+var md5 = fsHash.digest('hex');
+console.log("文件的MD5是：%s", md5);
+```
+
+
+
+### 维持浏览器最大并发数
+
+之前对于此问题的处理我只停留在理论方面
+
+- Promise.race 并发请求
+- 请求和响应对应使用闭包
+- 当一个请求完成时就 push 一个新请求
+
+这个私下写过一次，感觉逻辑挺复杂的，还没有实现😭
+
+这里使用之前面试的一家公司给我提供的解决办法
+
+```javascript
+const req = () => request({
+    url: '/test',
+    method: 'GET',
+    data: {}
+})
+class RequestLimit {
+    constructor(limit) {
+        // 定义最大连接数
+        this.limit = limit;
+      	// 当前传入的请求数量
+        this.cur = 0;
+      	// 存储未调用的请求
+        this.task = [];
+    }
+  	
+    async req(request) {
+      	// 当传入的请求数量大于最大连接数时，将请求存起来
+        if (this.cur >= this.limit) {
+          	// 此处将任务pending，等到前面的
+            await new Promise(resolve => this.task.push(resolve))
+        }
+      	// 对传入的请求计数
+        this.cur++;
+      	// 调用请求
+        try {
+            await request();
+        } catch (res) {
+            return Promise.reject(res);
+        // 请求结束之后 减去此请求 如果task中有为调用的请求就将其取出来调用
+        } finally {
+            this.cur--;
+            if (this.task.length) {
+                this.task.shift()();
+            }
+        }
+    }
+}
+const requestLimit = new RequestLimit(5)
+const arr = new Array(100).fill(req)
+arr.forEach(item => {
+    requestLimit.req(item)
+})
+```
+
+后面就很简单啦，这里就不写了
+
+
+
+参考资料：[ 用Vue实现一个大文件上传和断点续传](http://www.yiyong.info/article/115)
+
+
+
+### 文件下载
+
+#### 直接下载
+
+针对一些浏览器无法识别的文件格式，可以直接在地址栏输入URL即可触发浏览器的下载功能
+
+- 浏览器地址栏输入文件URL
+- window.location.href = URL
+- window.open(URL)
+
+#### 直接下载(使用 a 标签 download 属性)
+
+上面的直接下载只能用于浏览器无法识别的文件。如果是浏览器支持的文件格式(如： html、jpg、png)等，则不会触发文件下载，而是被浏览器直接触发解析展示
+
+我们可以 a 标签的 download 属性，还可以设置文件名
+
+```javascript
+<a href="/images/download.jpg" download="myFileName">
+```
+
+如果不想展示 a 标签，可以使用如下写法
+
+```javascript
+const download = (filename, link) => {
+    let DownloadLink = document.createElement('a'); 
+    DownloadLink.style = 'display: none'; // 创建一个隐藏的a标签
+    DownloadLink.download = filename;
+    DownloadLink.href = link;
+    document.body.appendChild(DownloadLink);
+    DownloadLink.click(); // 触发a标签的click事件
+    document.body.removeChild(DownloadLink);
+}
+```
+
+
+
+#### 直接下载(后端兼容处理 attachment)
+
+浏览器识别的文件默认进行了解析，我们可以声明文件的 header 的 Content-Dispositon 信息，告诉浏览器该链接为下载附件链接
+
+```javascript
+Content-Disposition: attachment; filename="filename.xls" 
+```
+
+在 **Express** 中可以采用如下写法：
+
+```javascript
+app.get('/download', (req, res) => {
+  let downloadFileName = 'app.js'
+  let mimeType = mime.getType(downloadFileName)
+  // ctx.response.headers['content-type'] = mimeType;
+
+  let stats = fs.statSync(downloadFileName)
+  if (stats.isFile()) {
+    res.set({
+      'Content-Type': 'application/octet-stream',
+      'Content-Disposition': 'attachment; filename=' + downloadFileName,
+      'Content-Length': stats.size
+    })
+  }
+  let rs = fs.createReadStream(downloadFileName)
+  // let ws = fs.createWriteStream();
+  rs.pipe(res)
+})
+```
+
+在 **Koa** 中简易写法：
+
+```javascript
+router.get('/download/:filename', async ctx => {
+	let { filename } = ctx.params
+	let filePath = `./static/file/${filename}`
+	ctx.attachment(filePath)
+	await send(ctx, filePath)
+})
+```
+
+参考资料： [前端文件下载的几种方式](https://www.jianshu.com/p/89dcef3eb9df)
+
+
+
+### 代码：[upload-download](https://github.com/1185090651/upload-download)
+
+
+
+
+
 # 算法
+
 ## 从交集时间中获取空闲时间段
 **业务背景**
 质检员需要质检客服和用户的通话录音，为了提高其工作效率，业务希望可以把客服用户都没说话且时长大于一秒的录音片段跳过，称为跳过空白录音功能
@@ -1551,6 +4071,210 @@ function useEffect(callback, depsAry) {
 ## Ref 原理解读
 [react框架ref系列API的用法及原理解析 - 掘金](https://juejin.cn/post/7282290326068052023)
 [「好文翻译」React 中的 Refs，从操作 DOM 到指令式 API - 掘金](https://juejin.cn/post/7291186330911326266)
+
+
+
+# Vue
+
+## ElementUI编辑数据resetFields失效
+
+这是一个在对数据进行添加和编辑经常出现的问题，添加和编辑共用一个组件，在添加或编辑之后使用 form 的 `resetFields` 将 form 中的数据清空。在添加的时候没有出现问题，唯独在编辑时出现问题，代码如下：
+
+```javascript
+editVideo(row) {
+   this.isEditMode = true
+   this.dialogFormVisible = true
+ 	 this.videoForm = row
+}
+```
+
+研究 `resetFields` 源码之后发现了问题：
+
+- resetFields 方法调用其实就是恢复 form 的初始值
+- 在添加时 form 的初始值就是我们定义的默认数据如下：
+
+```javascript
+videoForm: {
+	name: '',
+  labels: [],
+  video_url: '',
+  relate_id: '',
+  comment: ''
+}
+```
+
+在调用这个函数之后，form 实例上的初始值还原成上面的数据
+
+- 这个编辑值是在 form 组件 `mounted` 生命周期赋值上去的
+- 我们如果在创建 form 组件时就 `this.videoForm = row` 这样赋值，form 组件默认值就是 `row` 数据了
+- 所以我们可以使用 `this.$nextTick()` 在组件渲染完成之后给组件赋值，如下
+
+```javascript
+editVideo(row) {
+   this.isEditMode = true
+   this.dialogFormVisible = true
+ 	 this.$nextTick(() => {
+   		this.videoForm = row
+   })
+}
+```
+
+
+
+# 工程化
+
+## moment-locales-webpack-plugin插件
+
+在开发微信小程序时，打包出来的 vendor 文件太大，无法在线预览，排查出来是 moment 在打包时如果不配置会将所有语言的包全量导入。
+
+```javascript
+// webpack.config.js
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+ 
+module.exports = {
+    plugins: [
+        // To strip all locales except “en”
+        new MomentLocalesPlugin(),
+ 
+        // Or: To strip all locales except “en”, “es-us” and “ru”
+        // (“en” is built into Moment and can’t be removed)
+        new MomentLocalesPlugin({
+            localesToKeep: ['es-us'],
+        }),
+    ],
+};
+```
+
+
+
+## 前端请求错误优雅处理
+
+在日常开发中，经常出现由于后端报错导致整个系统都不可用的情况，原因总结有两个：
+
++ 前端封装函数使用promise，reject了一种情况，调用者没有捕获异常(如加入try..catch/.catch)，函数return了，return下面的逻辑未执行
++ 后端报错，前端取不到后端响应数据，比如`Cannot read properties of undefined`,程序不再往下执行
+
+### promise函数封装
+
+滴滴将一些可配置数据放在服务端，这些配置可以通过SDK或者请求后端接口获取。考虑到安全性，获取配置都通过后端接口；考虑到稳定性，SDK方式保留作为兜底。SDK方式可以看成函数的封装
+
+```javascript
+export const $_getApolloToggle = (apolloKey, restParams, notProcess = false) => 
+new Promise((resolve, reject) => {
+  // 没有引入Apollo SDK
+  if (!window.Apollo || !window.Apollo.getToggle) {
+    console.log(window.Apollo, window.Apollo.getToggle);
+    reject(new Error('Apollo.getToggle 不存在'));
+    return;
+  }
+  window.Apollo.getToggle({
+    ns: 'uemc',
+    key: 'kefu-fe',
+    name: apolloKey,
+    ...restParams,
+  }, res => {
+    if (res.code) {
+      trackOmega('tech_apollo_response_fail', { code: res.code });
+      reject(new Error('配置数据不存在'));
+      console.log(res);
+      return;
+    }
+    resolve(notProcess ? res.data : res.data[apolloKey]);
+  });
+});
+```
+
+里面做了两个错误处理。思考一下，其中一个情况被触发，promise 会变成 reject 状态，调用方的.catch函数执行，.then函数不执行，如果调用方没有做定制的错误处理，.then函数里的逻辑就不会执行了。
+
+#### 修改思路
+
+借鉴下 Promise.all 的一个痛点，如果 Promise.all 中的一个promise reject了，整个 all 函数就 reject，其中一个解决思路是把promise再封装一层
+
+```javascript
+/**
+ * @param {Promise} p 
+ */
+async function promiseWithError(p) {
+  try {
+    const res = await p;
+    return {
+      err: 0,
+      data: res
+    };
+  } catch(e) {
+    return {
+      err: 1
+    }
+  }
+}
+```
+
+这样这个函数就总能返回 resolve 的值了，成功与否通过 err 判断
+
+回到正题，我们试着把函数封装中的所有 reject 都改为 resolve, 然后返回数据中加入 判断成功与否的标志error
+
+#### 实践
+
+```javascript
+export const getApolloToggleBySDK = ({ name, params }) =>
+  Promise.race([
+    new Promise(resolve => {
+      if (!window.Apollo || !window.Apollo.getToggle) {
+        console.error(
+          window.Apollo,
+          window.Apollo.getToggle,
+          'Apollo.getToggle 不存在',
+        );
+        resolve({ error: { code: 9999, message: 'Apollo.getToggle 不存在' } });
+        return;
+      }
+      window.Apollo.getToggle({ ns: 'uemc', key: 'kefu-fe', name, ...params },
+        res => {
+          if (res.code) {
+            trackOmega('tech_apollo_response_fail', {
+              code: res.code,
+              msg: '配置数据不存在',
+            });
+            console.error(res, '配置数据不存在');
+            resolve({ error: { code: 9999, message: '配置数据不存在' } });
+            return;
+          }
+          resolve({ data: res.data });
+        },
+      );
+    }),
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ error: { code: 9999, message: 'apollo返回时间超过1s' } });
+        trackOmega('tech_apollo_response_fail', { msg: 'apollo返回时间超过1s' });
+      }, 1000);
+    }),
+  ]);
+```
+
+调用
+
+```javascript
+export const getNewApolloToggle = async params => {
+  if (location.href.includes('hongyibo')) {
+    const res = await getApolloToggleBySDK(params);
+    return { ...res, fromSDK: true };
+  }
+  const apiRes = await getApolloToggleByAPI(params);
+  if (!apiRes.error) return { ...apiRes, fromSDK: false };
+  // 通过后端获取接口down掉 兜底SDK
+  const sdkRes = await getApolloToggleBySDK(params);
+  return { ...sdkRes, fromSDK: true };
+};
+```
+
+### axios封装
+
+![11](./images/1635315129912-5cccd30e-5170-4533-a83a-e35e7e725e69.png)
+
+
+
+
 
 # 杂七杂八
 
