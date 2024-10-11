@@ -159,7 +159,7 @@ sudo -S route -n add -net 192.100.50.0 -netmask 255.255.255.0 10.200.101.1
 4. preload 与 prefetch 预加载。两个都是指示浏览器对资源提前下载，区别在于优先级，prefetch 优先级低，会在浏览器空闲时请求；preload 优先级高，无论浏览器是否空闲都需要提前返回，适于优先级比较低但是又急切需要的资源
 5. prerender 预渲染。访问页面之前加载所有资源，但碍于用户行为预测不准、影响埋点和兼容性问题，此 api 很少使用
 6. Speculation Rules API。提供一种声明式的方法来指示浏览器应该对哪些链接进行预取操作，通过这个 API，开发者可以更精确地指示浏览器在何时和如何预取资源
-7. 流式渲染。
+7. 流式渲染
 
 ## HTTP Streaming
 
@@ -286,19 +286,20 @@ http2.createSecureServer(
 - 工具链成熟：代码生成便捷，开箱即用，降低了开发难度。
 
 3. 我问文心一言：web已经支持http/2.0，为什么不能直接连接grpc？
-   虽然Web已经支持HTTP/2.0，但Web浏览器和gRPC之间的连接存在一些限制和差异，导致它们不能直接进行连接。以下是主要的原因：
 
-协议差异：
+虽然Web已经支持HTTP/2.0，但Web浏览器和gRPC之间的连接存在一些限制和差异，导致它们不能直接进行连接。以下是主要的原因：
+
+**协议差异：**
 gRPC是基于HTTP/2的，但它不仅仅是HTTP/2。gRPC使用Protocol Buffers作为接口定义语言（IDL），并使用特定的序列化格式和传输机制。这与HTTP/2作为纯HTTP协议有所不同。
-浏览器限制：
+**浏览器限制：**
 传统上，从browser-based应用程序使用gRPC是不可能的，因为浏览器不公开任何让JS/WASM代码直接控制HTTP/2请求的API。浏览器对HTTP/2的支持主要集中在作为HTTP协议的一部分，而不是作为gRPC的传输层。
-gRPC-Web：
+**gRPC-Web：**
 为了解决这个问题，gRPC社区开发了gRPC-Web，这是一个允许在浏览器中运行的客户端与gRPC服务进行通信的规范。gRPC-Web在HTTP/1.1上工作，并使用特殊的代理来将gRPC调用转换为可以在浏览器中执行的HTTP请求。
-安全性考虑：
+**安全性考虑：**
 在浏览器中使用gRPC还涉及到安全性问题。由于gRPC使用Protocol Buffers作为消息格式，这可能需要特定的安全措施来确保浏览器中的代码不会被恶意消息所利用。
-缺乏广泛支持：
+**缺乏广泛支持：**
 尽管gRPC-Web提供了一种解决方案，但它尚未在所有服务器或客户端框架中得到广泛支持。这意味着不是所有的gRPC服务都可以直接与浏览器通信。
-实现复杂性：
+**实现复杂性：**
 即使在服务器端和客户端都支持gRPC-Web的情况下，也需要额外的配置和设置来确保它们能够正确地通信。这增加了实现的复杂性。
 综上所述，虽然Web支持HTTP/2.0，但由于协议差异、浏览器限制、安全性考虑、缺乏广泛支持以及实现复杂性等因素，浏览器不能直接连接gRPC服务。然而，通过使用gRPC-Web等技术，可以在一定程度上实现浏览器与gRPC服务之间的通信。
 
@@ -313,8 +314,6 @@ Last-Modified：响应头，表示当前资源的最后修改时间；
 If-Modified-Since：请求头，表示缓存的资源最后修改时间；
 
 状态码304：表示访问的资源没有改变
-
-
 
 客户端首次访问服务器的静态资源index.html，服务器会把index.html响应给客户端，而且还会添加一个名为Last-Modified的响应头，它说明了当前index.html的最后修改时间
 
@@ -341,19 +340,11 @@ Connection: close
 
 ETag是HTTP1.1中才加入的一个属性，用来帮助服务器控制Web端的缓存验证。
 
-
-
-它的原理是这样的，当浏览器请求服务器的某项资源(A)时, 服务器根据A算出一个哈希值(3f80f-1b6-3e1cb03b)并通过 ETag 返回给浏览器，浏览器把"3f80f-1b6-3e1cb03b" 和 A 同时缓存在本地，当下次再次向服务器请求A时，会通过类似 If-None-Match: “3f80f-1b6-3e1cb03b” 的请求头把ETag发送给服务器，服务器再次计算A的哈希值并和浏览器返回的值做比较，如果发现A发生了变化就把A返回给浏览器(200)，如果发现A没有变化就给浏览器返回一个304未修改。
-
-
+它的原理是这样，当浏览器请求服务器的某项资源(A)时, 服务器根据A算出一个哈希值(3f80f-1b6-3e1cb03b)并通过 ETag 返回给浏览器，浏览器把"3f80f-1b6-3e1cb03b" 和 A 同时缓存在本地，当下次再次向服务器请求A时，会通过类似 If-None-Match: “3f80f-1b6-3e1cb03b” 的请求头把ETag发送给服务器，服务器再次计算A的哈希值并和浏览器返回的值做比较，如果发现A发生了变化就把A返回给浏览器(200)，如果发现A没有变化就给浏览器返回一个304未修改。
 
 这样通过控制浏览器端的缓存，可以节省服务器的带宽，因为服务器不需要每次都把全量数据返回给客户端。
 
-
-
 通常情况下，ETag更类似于资源指纹(fingerprints)，如果资源发生变化了就会生成一个新的指纹，这样可以快速的比较资源的变化。在服务器端实现中，很多情况下并不会用哈希来计算ETag，这会严重浪费服务器端资源，很多网站默认是禁用ETag的。有些情况下，可以把ETag退化，比如通过资源的版本或者修改时间来生成ETag。
-
-
 
 如果通过资源修改时间来生成ETag，那么效果和HTTP协议里面的另外一个控制属性(Last-Modified)就雷同了，使用 Last-Modified 的问题在于它的精度在秒(s)的级别，比较适合不太敏感的静态资源。
 
@@ -381,11 +372,7 @@ OPTIONS    查询Web服务器的性能
 
  
 
-说明：
-
-主要使用到“GET”和“POST”。
-
-实例：
+说明：主要使用到“GET”和“POST”。
 
 POST /test/tupian/cm HTTP/1.1
 
@@ -397,19 +384,13 @@ POST /test/tupian/cm HTTP/1.1
 
 （3）HTTP/1.1: URI（Uniform Resource Identifier，统一资源标识符）及其版本
 
-备注：
-
-​     在Ajax中，对应method属性设置。
+备注：在Ajax中，对应method属性设置。
 
 
 
 **2、Host**
 
-说明：
-
-请求的web服务器域名地址
-
-实例：
+说明：请求的web服务器域名地址
 
 例如web请求URL：http://zjm-forum-test10.zjm.baidu.com:8088/test/tupian/cm
 
@@ -419,31 +400,21 @@ Host就为zjm-forum-test10.zjm.baidu.com:8088
 
 **3、User-Agent**
 
-说明：
+说明：HTTP客户端运行的浏览器类型的详细信息。通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别。
 
-HTTP客户端运行的浏览器类型的详细信息。通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别。
-
-实例：
-
-  User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11
 
 
 
 **4、Accept**
 
-说明：
-
-指定客户端能够接收的内容类型，内容类型中的先后次序表示客户端接收的先后次序。
-
-实例：
-
-​     例如：
+说明：指定客户端能够接收的内容类型，内容类型中的先后次序表示客户端接收的先后次序。
 
 Accept:text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
 
 备注：
 
-在Prototyp（1.5）的Ajax代码封装中，将Accept默认设置为“text/javascript, text/html, application/xml, text/xml, */*”。这是因为Ajax默认获取服务器返回的Json数据模式。
+在Prototype（1.5）的Ajax代码封装中，将Accept默认设置为“text/javascript, text/html, application/xml, text/xml, */*”。这是因为Ajax默认获取服务器返回的json数据模式。
 
 在Ajax代码中，可以使用XMLHttpRequest 对象中setRequestHeader函数方法来动态设置这些Header信息。
 
@@ -451,27 +422,17 @@ Accept:text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain
 
 **5、Accept-Language**
 
-说明：
+说明：指定HTTP客户端浏览器用来展示返回信息所优先选择的语言。
 
-  指定HTTP客户端浏览器用来展示返回信息所优先选择的语言。
-
-实例：
-
-Accept-Language: zh-cn,zh;q=0.5
-
-​     这里默认为中文。
+Accept-Language: zh-cn,zh;q=0.5 这里默认为中文。
 
 
 
 **6、Accept-Encoding**
 
-说明：
+说明：指定客户端浏览器可以支持的web服务器返回内容压缩编码类型。表示允许服务器在将输出内容发送到客户端以前进行压缩，以节约带宽。而这里设置的就是客户端浏览器所能够支持的返回压缩格式。
 
-​     指定客户端浏览器可以支持的web服务器返回内容压缩编码类型。表示允许服务器在将输出内容发送到客户端以前进行压缩，以节约带宽。而这里设置的就是客户端浏览器所能够支持的返回压缩格式。
-
-实例：
-
-​     Accept-Encoding: gzip,deflate
+Accept-Encoding: gzip,deflate
 
 备注：
 
@@ -485,25 +446,17 @@ http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html
 
 **7、Accept-Charset**
 
-说明：
+说明：浏览器可以接受的字符编码集。
 
-​     浏览器可以接受的字符编码集。
-
-实例：
-
-​     Accept-Charset: gb2312,utf-8;q=0.7,*;q=0.7
+Accept-Charset: gb2312,utf-8;q=0.7,*;q=0.7
 
 
 
 **8、Content-Type**
 
-说明：
+说明：显示此HTTP请求提交的内容类型。一般只有post提交时才需要设置该属性。
 
-显示此HTTP请求提交的内容类型。一般只有post提交时才需要设置该属性。
-
-实例：
-
-​     Content-type: application/x-www-form-urlencoded;charset:UTF-8
+Content-type: application/x-www-form-urlencoded;charset:UTF-8
 
 有关Content-Type属性值可以如下两种编码类型：
 
@@ -515,49 +468,35 @@ http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html
 
 在Content-Type属性当中还是指定提交内容的charset字符编码。一般不进行设置，它只是告诉web服务器post提交的数据采用的何种字符编码。
 
-​     一般在开发过程，是由前端工程与后端UI工程师商量好使用什么字符编码格式来post提交的，然后后端ui工程师按照固定的字符编码来解析提交的数据。所以这里设置的charset没有多大作用。
+ 一般在开发过程，是由前端工程与后端UI工程师商量好使用什么字符编码格式来post提交的，然后后端ui工程师按照固定的字符编码来解析提交的数据。所以这里设置的charset没有多大作用。
 
 
 
-**9、****Connection**
+**9、Connection**
 
-说明：
+说明：表示是否需要持久连接。如果web服务器端看到这里的值为“Keep-Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接），它就可以利用持久连接的优点，当页面包含多个元素时（例如Applet，图片），显著地减少下载所需要的时间。要实现这一点， web服务器需要在返回给客户端HTTP头信息中发送一个Content-Length（返回信息正文的长度）头，最简单的实现方法是：先把内容写入ByteArrayOutputStream，然后在正式写出内容之前计算它的大小。
 
-表示是否需要持久连接。如果web服务器端看到这里的值为“Keep-Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接），它就可以利用持久连接的优点，当页面包含多个元素时（例如Applet，图片），显著地减少下载所需要的时间。要实现这一点， web服务器需要在返回给客户端HTTP头信息中发送一个Content-Length（返回信息正文的长度）头，最简单的实现方法是：先把内容写入ByteArrayOutputStream，然 后在正式写出内容之前计算它的大小。
-
-实例：
-
-**Connection: keep-alive**
+Connection: keep-alive
 
 
 
 **10、Keep-Alive**
 
-说明：
+说明：显示此HTTP连接的Keep-Alive时间。使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
 
-​     显示此HTTP连接的Keep-Alive时间。使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。
+以前HTTP请求是一站式连接，从HTTP/1.1协议之后，就有了长连接，即在规定的Keep-Alive时间内，连接是不会断开的。
 
-​     以前HTTP请求是一站式连接，从HTTP/1.1协议之后，就有了长连接，即在规定的Keep-Alive时间内，连接是不会断开的。
-
-实例：
-
-**Keep-Alive: 300**
+Keep-Alive: 300
 
 
 
 **11、cookie**
 
-说明：
-
-​     HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。
+说明：HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。
 
 **12、Referer**
 
-说明：
-
-包含一个URL，用户从该URL代表的页面出发访问当前请求的页面
-
-
+说明：包含一个URL，用户从该URL代表的页面出发访问当前请求的页面
 
 
 
@@ -567,19 +506,13 @@ http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_deflate.html
 
 **1、Content-Length**
 
-说明：
-
-​     表示web服务器返回消息正文的长度
+说明：表示web服务器返回消息正文的长度
 
 
 
 **2、Content-Type:**
 
-说明：
-
-​     返回数据的类型（例如text/html文本类型）和字符编码格式。
-
-实例：
+说明：返回数据的类型（例如text/html文本类型）和字符编码格式。
 
 Content-Type: text/html;charset=utf-8
 
@@ -587,9 +520,7 @@ Content-Type: text/html;charset=utf-8
 
 **3、Date**
 
-说明：
-
-​     显示当前的时间
+说明：显示当前的时间
 
 
 
@@ -611,11 +542,9 @@ Content-Type: text/html;charset=utf-8
 
 <font style="color:#121212;">从客户端到本地DNS服务器是属于递归查询，而DNS服务器之间就是的交互查询就是迭代查询。</font>
 
+这里涉及两个概念：递归查询和迭代查询。
 
-
-<font style="color:#121212;">这里涉及两个概念：递归查询和迭代查询。</font>
-
-<font style="color:#333333;">递归是用户只向本地DNS服务器发出请求，然后等待肯定或否定答案。而迭代是本地服务器向根DNS服务器发出请求，而根DNS服务器只是给出下一级DNS服务器的地址，然后本地DNS服务器再向下一级DNS发送查询请求直至得到最终答案。</font>
+递归是用户只向本地DNS服务器发出请求，然后等待肯定或否定答案。而迭代是本地服务器向根DNS服务器发出请求，而根DNS服务器只是给出下一级DNS服务器的地址，然后本地DNS服务器再向下一级DNS发送查询请求直至得到最终答案。
 
 
 
@@ -857,9 +786,10 @@ html {
   }
 }
 ```
-`**color-scheme**`
+`color-scheme`
 有些系统自带的控件如表单控件、滚动条并没有完全适配主题，需要添加 color-scheme  meta 标签告诉浏览器网站支持主题切换
 将以下 meta 标签添加到文档头部，content 字段制定文档支持的主题模式
+
 ```html
 <meta name="color-scheme" content="light dark" />
 ```
@@ -1020,7 +950,7 @@ console.log(zhangsan.speak === lisi.speak) // true
 
 ![image.png](./images/5-image.png)
 
-### 手写 new
+## 手写 new
 
 ```js
 //Fun为构造函数, args表示传参
@@ -1041,6 +971,12 @@ function myNew(Fun, ...args) {
 
 let obj = myNew(One, "XiaoMing", "18");
 ```
+
+
+
+## 箭头函数出现的原因
+
+为了降低开发者的心智负担。没有箭头函数出现之前任何第三方库导出的函数既可以调用也可以 new 实例化，而且调用都不会出错，如果没有介绍文档就只能看源码了，而 ugly 后的源码又十分难阅读，箭头函数草案提出是为了让开发者写普通函数使用，当实例化使用时，代码执行时会直接报错
 
 
 
@@ -1086,7 +1022,7 @@ console.log(person1.__proto__) // object {constructor: Person}
 
 可以看到`Person.prototype`指向了一个对象，即**Person的原型对象**，并且这个对象有一个`constructor`属性，又指向了`Person`函数对象，而且实例 person1 的 `__proto__` 也指向了 Person的原型对象，所以他们之间存在如下关系
 
-Person.prototype === person1.__proto__
+Person.prototype === person1.\__proto__
 
 Person.prototype.constructor === Person
 
@@ -1185,6 +1121,8 @@ let b = new B();
 [前端进阶算法2：从Chrome V8源码看JavaScript数组](https://github.com/sisterAn/JavaScript-Algorithms/issues/2)
 
 总结：v8 封装底层数组自动扩容减容，减少开发者认知负担
+
+
 
 ## 你写过axios请求拦截器的第二个参数吗
 最近在重构老项目逻辑时，需要对axios进行二次封装，在写到请求拦截器的第二个参数时突然有个疑问，什么时候第二个reject函数参数执行呢？
@@ -1427,9 +1365,7 @@ module.exports = function () {
 
 
 
-## 变量提升及词法作用域
-
-**词法作用域 (Lexical Scope)**
+## 词法作用域 (Lexical Scope)
 
 词法作用域也就是在词法阶段定义的作用域，也就是说词法作用域在代码书写时就已经确定。
 
@@ -1482,7 +1418,109 @@ if(flag) {
 }
 ```
 
-这里存在两种两个词法作用域，一个是全局另一个是函数内，所以第一行的代码不会报错
+这里存在两种两个词法作用域，一个是全局另一个是函数内，所以第一行的代码不会报错，
+
+
+
+## 手写call、apply、bind
+
+在写此文章之前，在网上看了很多关于手写这些函数的方法，大部分使用的都是 ES5 语法，非常难记，所以这里花点时间自己写一下。关于里面的 ES6 语法，可以自己去 MDN 上找兼容方法，这些不作为本文的重点。
+
+上述的方法的作用都是改变 this 的指向，所以只要改变下函数的执行逻辑就可以完成封装了
+
+# Call
+
+在一个对象的上下文中应用另一个对象的方法；参数能够以列表形式传入。
+
+```javascript
+// 先来看下函数的使用
+const obj = {
+  name: 'foo',
+  age: 'bar'
+}
+
+function Person(x, y) {
+  console.log(this.name + this.age + x + y)
+}
+
+Person.call(obj, 'hello', 'world')
+// => foobarhelloworld
+
+// call 第一个参数是上下文，后面的是传入的参数 call在传入的上下文中执行方法
+
+// 上述的代码变形后应该是这样
+const obj = {
+  name: 'foo',
+  age: 'bar',
+  Person: function(x, y) {
+  	console.log(this.name + this.age + x + y)
+  }
+}
+obj.Person('hello', 'world')
+
+// 所以我们可以这样去封装我们的 call 方法
+
+Function.prototype._call = function(ctx, ...args) {
+    // 处理下不是函数调用的问题
+  	if(typeof this !== 'function') {
+        throw new TypeError('error')
+    }
+    if(typeof ctx === 'undefined' || ctx === null) {
+        ctx = window
+    }
+  	// 这里采用 Symbol 做属性，Symbol 惟一，防止我们随意创建的字段在 obj中存在，污染代码
+    const fnSymbol = Symbol()
+    ctx[fnSymbol] = this;
+    const fn = ctx[fnSymbol](...args)
+    delete ctx[fnSymbol]
+    return fn
+}
+```
+
+
+
+# Apply
+
+`apply()` 方法调用一个具有给定`this`值的函数，以及以一个数组（或[类数组对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Indexed_collections#working_with_array-like_objects)）的形式提供的参数。
+
+call()方法的作用和 apply() 方法类似，区别就是`call()`方法接受的是**参数列表**，而`apply()`方法接受的是**一个参数数组**。
+
+```javascript
+// 只是一个传入参数类型的不同 所以直接使用我们上面封装好的 _call 就可以了
+Function.prototype._apply = function(ctx, args) {
+	return this._call(ctx, ...args)
+}
+```
+
+
+
+# Bind
+
+`bind()` 方法创建一个新的函数，在 `bind()` 被调用时，这个新函数的 `this` 被指定为 `bind()` 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
+
+`bind()` 最简单的用法是创建一个函数，不论怎么调用，这个函数都有同样的 `this` 值。JavaScript新手经常犯的一个错误是将一个方法从对象中拿出来，然后再调用，期望方法中的 `this` 是原来的对象（比如在回调中传入这个方法）。如果不做特殊处理的话，一般会丢失原来的对象。基于这个函数，用原始的对象创建一个绑定函数，巧妙地解决了这个问题
+
+```javascript
+// bind 相比于之前的两个函数区别在于返回一个函数，仅因为这一点区别，我们还需要考虑到返回的函数可能进行 new 的操作，这里需要单独处理一下
+
+Function.prototype._bind = function (ctx, ...args) {
+    if (typeof this !== 'function') {
+      throw new TypeError('Error');
+    }
+  	if(typeof ctx === 'undefined' || ctx === null) {
+        ctx = window
+    }
+    //返回一个绑定this的函数，我们需要在此保存this
+    const fn = this;
+    return function newFn(...newFnArgs) {
+      // 当函数 new 之后，这里的 this 代表你 new 出来的实例，由此判断用户是否使用了 new
+      if (this instanceof newFn) {
+        return new fn(...args, ...newFnArgs)
+      }
+      return fn.apply(ctx, [...args, ...newFnArgs])
+    }
+  };
+```
 
 
 
@@ -1585,6 +1623,47 @@ getLetterWidth('foo')
 
 
 
+# Node
+
+## Node 和 浏览器环境对微任务的处理差异(node12之前)
+
+浏览器环境下，microtask 的任务队列是每个 macrotask 执行完之后执行。而在 Node.js 中，microtask 会在事件循环的各个阶段之间执行，也就是一个阶段执行完毕，就会去执行 microtask 队列的任务。
+
+![img](./images/1619620768187-59ed0bb3-a95a-4292-b23c-edf106ee958b.png)
+
+接下我们通过一个例子来说明两者区别：
+
+```javascript
+setTimeout(()=>{
+    console.log('timer1')
+    Promise.resolve().then(function() {
+        console.log('promise1')
+    })
+}, 0)
+setTimeout(()=>{
+    console.log('timer2')
+    Promise.resolve().then(function() {
+        console.log('promise2')
+    })
+}, 0)
+```
+
+浏览器端运行结果：`timer1=>promise1=>timer2=>promise2`
+
+浏览器端的处理过程如下：
+
+![img](./images/1619620768200-b1098fe2-ec24-499c-9f80-c8c15ced63da.gif)
+
+Node 端运行结果：`timer1=>timer2=>promise1=>promise2`
+
+- 全局脚本（main()）执行，将 2 个 timer 依次放入 timer 队列，main()执行完毕，调用栈空闲，任务队列开始执行；
+- 首先进入 timers 阶段，执行 timer1 的回调函数，打印 timer1，并将 promise1.then 回调放入 microtask 队列，同样的步骤执行 timer2，打印 timer2；
+- 至此，timer 阶段执行结束，event loop 进入下一个阶段之前，执行 microtask 队列的所有任务，依次打印 promise1、promise2
+
+Node 端的处理过程如下：
+
+![img](./images/1619620768188-186e3814-35d8-4321-a225-6ffb592e84c3.gif)
+
 
 
 # 代码格式化
@@ -1596,6 +1675,7 @@ getLetterWidth('foo')
 左右两部分代码哪个漂亮十分明显，而想要禁用他的规则是十分困难的，唯一能做的是使用 `**// prettier-ignore**`
 从上面分析可以看出，eslint 可以满足两个功能，为什么项目中不只用 eslint 呢？答案是可以的。
 eslint 有很多预设，还有很多公司开发的规范插件，比如 airbnb。里面具体的规则是什么呢，你可能需要从 node_modules 中去查看，对于大部分人来说，很少有人关心里面的具体 rules，只要在项目中的 eslint 配置中修改相应 rules 就可以了，下面记录下贴合我代码规范的 rules
+
 ```javascript
 module.exports = {
   env: {
@@ -3350,6 +3430,30 @@ router.get('/download/:filename', async ctx => {
 
 
 
+## 优化首屏元素太多导致白屏问题
+
+除了使用懒加载也可以自动延后渲染来实现效果，指示浏览器在第几帧渲染哪些元素
+
+```tsx
+import { useState } from 'react';
+import HeavyCom from './HeavyCom'; // 2000个div
+
+export function App() {
+  const [count, setCount] = useState(0);
+  requestAnimationFrame(() => {
+    setCount((n) => n + 1);
+  });
+  return (
+    <>
+      {new Array(100).fill(1).map((item, idx) => {
+        return count >= idx + 1 && <HeavyCom />;
+      })}
+    </>
+  );
+}
+
+```
+
 
 
 # 算法
@@ -3440,7 +3544,10 @@ rectifyData.reduce((pre, cur) => {
 console.log(silentData)
 ```
 
+
+
 ## ListToTree
+
 ```typescript
 type Item = {
   parentId: number, id: number, text: string, children?: Item[]
@@ -4445,6 +4552,12 @@ plugins=(
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
+```
+
+保存更改
+
+```shell
+source ~/.zshrc
 ```
 
 6. 安装 nvm。
