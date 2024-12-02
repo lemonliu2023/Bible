@@ -7,6 +7,12 @@
   - [HTTP Request 的 Header 信息](#http-request-的-header-信息)
   - [HTTP Response的Header信息](#http-response的header信息)
   - [域名解析过程](#域名解析过程)
+  - [HTTPS 通信过程](#https-通信过程)
+  - [HTTP 缓存](#http-缓存)
+  - [cookie和jwt的区别](#cookie和jwt的区别)
+- [计算机基础](#计算机基础)
+  - [进程和线程](#进程和线程)
+      - [2. 多进程与多线程](#2-多进程与多线程)
 - [HTML](#html)
   - [label 标签介绍](#label-标签介绍)
   - [i和em标签的区别](#i和em标签的区别)
@@ -16,9 +22,10 @@
   - [css 之 filter、backdrop-filter](#css-之-filterbackdrop-filter)
   - [提取图片主色调](#提取图片主色调)
   - [抖动css](#抖动css)
+  - [BFC](#bfc)
 - [JS](#js)
-  - [原型链](#原型链)
-    - [怎么理解原型链?](#怎么理解原型链)
+  - [简述Event Loop](#简述event-loop)
+  - [怎么理解原型链](#怎么理解原型链)
   - [手写 new](#手写-new)
   - [箭头函数出现的原因](#箭头函数出现的原因)
   - [JS中的继承](#js中的继承)
@@ -31,13 +38,17 @@
   - [你写过axios请求拦截器的第二个参数吗](#你写过axios请求拦截器的第二个参数吗)
   - [CheckVersions](#checkversions)
   - [词法作用域 (Lexical Scope)](#词法作用域-lexical-scope)
-  - [手写call、apply、bind](#手写callapplybind)
-- [Call](#call)
-- [Apply](#apply)
-- [Bind](#bind)
+  - [call、apply、bind](#callapplybind)
+    - [Call](#call)
+    - [Apply](#apply)
+    - [Bind](#bind)
+  - [洋葱圈](#洋葱圈)
+  - [柯里化](#柯里化)
+  - [WeakMap与Map的区别](#weakmap与map的区别)
 - [TS](#ts)
   - [TS 函数重载](#ts-函数重载)
   - [TS 和 JS 通信](#ts-和-js-通信)
+  - [获取对象里的可选字段](#获取对象里的可选字段)
   - [模糊TS的推断](#模糊ts的推断)
 - [Node](#node)
   - [Node 和 浏览器环境对微任务的处理差异(node12之前)](#node-和-浏览器环境对微任务的处理差异node12之前)
@@ -45,6 +56,7 @@
   - [eslint](#eslint)
   - [Vetur](#vetur)
 - [前端场景](#前端场景)
+  - [性能优化](#性能优化)
   - [开发中的广告处理](#开发中的广告处理)
   - [常用的几种跨域解决方案](#常用的几种跨域解决方案)
     - [1. 修改本地 HOST](#1-修改本地-host)
@@ -99,6 +111,8 @@
   - [LRU](#lru)
   - [hashtable](#hashtable)
   - [认识树](#认识树)
+  - [合并两个有序数组](#合并两个有序数组)
+  - [最长递增子序列](#最长递增子序列)
 - [Docker](#docker)
   - [使用 docker 作为开发环境](#使用-docker-作为开发环境)
   - [使用 docker 私有部署项目](#使用-docker-私有部署项目)
@@ -124,13 +138,18 @@
   - [Ref 原理解读](#ref-原理解读)
 - [Vue](#vue)
   - [ElementUI编辑数据resetFields失效](#elementui编辑数据resetfields失效)
+  - [Vue和React处理响应式的差异](#vue和react处理响应式的差异)
+  - [Vue2和Vue3 Diff算法的区别](#vue2和vue3-diff算法的区别)
 - [工程化](#工程化)
   - [moment-locales-webpack-plugin插件](#moment-locales-webpack-plugin插件)
-  - [前端请求错误优雅处理](#前端请求错误优雅处理)
+  - [前端请求错误优雅处理(防御性编程)](#前端请求错误优雅处理防御性编程)
     - [promise函数封装](#promise函数封装)
       - [修改思路](#修改思路)
       - [实践](#实践)
     - [axios封装](#axios封装)
+  - [模块化](#模块化)
+  - [打包读取目录结构](#打包读取目录结构)
+  - [npm workspaces 解决了什么问题](#npm-workspaces-解决了什么问题)
 - [杂七杂八](#杂七杂八)
   - [使用vnc访问远程系统](#使用vnc访问远程系统)
   - [mac安装windows虚拟机](#mac安装windows虚拟机)
@@ -556,6 +575,25 @@ Content-Type: text/html;charset=utf-8
 
 
 
+## HTTPS 通信过程
+
+![在这里插入图片描述](./images/04970bbe5e4c4c018e54674976a4e9be.webp)
+
+## HTTP 缓存
+
+1. 强缓存。server 发送 Expires 或 Cache-Control，
+2. 协商缓存。server 发送 ETag，client 发送 If-None-Match；server 发送 Last-Modified，client 发送 If-Modified-Since
+
+
+
+## cookie和jwt的区别
+
+- **Cookie** 更适合传统的会话管理场景，尤其是在需要持久化数据或与服务器 Session 配合时。
+
+- **JWT** 更适合现代无状态认证的场景，例如 RESTful API 的身份验证，可以减少服务器的会话存储压力，但需要注意数据的加密和安全性。
+
+
+
 # 计算机基础
 
 ## 进程和线程
@@ -940,10 +978,22 @@ const img = new Image()
 ```
 
 
-# JS
-## 原型链
 
-### 怎么理解原型链?
+## BFC
+
+清除浮动，避免高度塌陷 https://segmentfault.com/a/1190000013647777
+
+
+
+# JS
+
+## 简述Event Loop
+
+因为JS是单线程的，单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。为了解决排队等待问题，JS的任务分为同步任务（synchronous）和异步任务（asynchronous）。 所有同步任务都在主线程上执行，形成一个Stack）。异步任务（如果是WebAPI 则会进入WebAPI，例如ajax setTimeout）不进入主线程，而是进入另一 Callback Queue。同步任务顺序执行，只有执行栈中的同步任务执行完了，系统才回读取任务队列中可以执行的异步任务，才会把此异步任务从事件队列中放入执行栈中执行，如此循环，直至所有任务执行完毕。
+
+
+
+## 怎么理解原型链
 
 ```js
 function Person (name) {
@@ -1452,7 +1502,7 @@ if(flag) {
 
 
 
-## 手写call、apply、bind
+## call、apply、bind
 
 在写此文章之前，在网上看了很多关于手写这些函数的方法，大部分使用的都是 ES5 语法，非常难记，所以这里花点时间自己写一下。关于里面的 ES6 语法，可以自己去 MDN 上找兼容方法，这些不作为本文的重点。
 
@@ -1554,12 +1604,245 @@ Function.prototype._bind = function (ctx, ...args) {
 
 
 
-## 手写洋葱圈
+## 洋葱圈
+
+```js
+class TaskPro {
+  constructor() {
+    this._TaskList = []
+    this._isRunning = false
+    this._currentIndex = 0
+    // next 函数，要支持异步
+    this._next = async () => {
+      this._currentIndex++
+      await this._runTask()
+    }
+  }
+ 
+  // 添加任务函数
+  addTask(task) {
+    this._TaskList.push(task)
+  }
+ 
+  // run 函数
+  run() {
+    if(this._isRunning || !this._TaskList.length) return
+    this._isRunning = true
+    this._runTask()
+  }
+ 
+  // 执行任务函数，要支持异步
+  async _runTask() {
+    // 当前索引 >= 任务列表长度，表示已全部执行完
+    if(this._currentIndex >= this._TaskList.length){
+      this._reset()
+      return
+    }
+    const i = this._currentIndex
+    const taskItem = this._TaskList[this._currentIndex]
+    await taskItem(this._next)
+    const j = this._currentIndex
+    // 如果执行前的下标和执行后的下标相同，表示没有调用 next() 那么自行调用
+    if(i === j) {
+      this._next()
+    }
+  } 
+  
+  // 重置函数
+  _reset() {
+    this._TaskList = []
+    this._currentIndex = 0
+    this._isRunning = false
+  }
+}
+ 
+const taskPro = new TaskPro()
+taskPro.addTask(async (next) => {
+  console.log(1, '打印测试');
+  await next()
+  console.log('1-1', '打印测试');
+  
+})
+ 
+taskPro.addTask(() => {
+  console.log(2, '打印测试');
+})
+ 
+taskPro.addTask(() => {
+  console.log(3, '打印测试');
+})
+ 
+taskPro.run()
+taskPro.run()
+ 
+// 最终输出结果
+// 1 打印测试
+// 2 打印测试
+// 3 打印测试
+// 1-1 打印测试
+```
 
 
 
-## 手写柯里化
+## 柯里化
 
+> 降低适用范围，提高适用性
+
+1. 使用闭包缓存参数列表
+2. 函数的length为参数的数量
+
+```js
+/**
+ * @description: 将函数柯里化的工具函数
+ * @param {Function} fn 待柯里化的函数
+ * @param {array} args 已经接收的参数列表
+ * @return {Function}
+ */
+const currying = function(fn, ...args) {
+    // fn需要的参数个数
+    const len = fn.length
+    // 返回一个函数接收剩余参数
+    return function (...params) {
+        // 拼接已经接收和新接收的参数列表
+        let _args = [...args, ...params]
+        // 如果已经接收的参数个数还不够，继续返回一个新函数接收剩余参数
+        if (_args.length < len) {
+            return currying.call(this, fn, ..._args)
+        }
+      	// 参数全部接收完调用原函数
+        return fn.apply(this, _args)
+    }
+}
+```
+
+
+
+## WeakMap与Map的区别
+
+`WeakMap` 和 `Map` 是 JavaScript 中两种用于存储键值对的数据结构，它们在用途、行为和特性上有一些关键区别。
+
+---
+
+**1. 键的类型**
+
+**Map**：
+
+- 键可以是任何类型，包括基本类型（如字符串、数字）和引用类型（如对象、数组）。
+- 示例：
+  ```javascript
+  const map = new Map();
+  map.set('key', 'value'); // 字符串作为键
+  map.set(123, 'value');   // 数字作为键
+  map.set({}, 'value');    // 对象作为键
+  console.log(map);
+  ```
+
+**WeakMap**：
+
+- 键必须是**对象**（或者说是引用类型），不能是基本类型。
+- 示例：
+  ```javascript
+  const weakMap = new WeakMap();
+  const obj = {};
+  weakMap.set(obj, 'value'); // 对象作为键
+  // weakMap.set('key', 'value'); // 报错：键必须是对象
+  ```
+
+---
+
+**2. 键的弱引用**
+
+**Map**：
+
+- **强引用**：`Map` 中的键会被强引用，只要键存在于 `Map` 中，对应的对象就不会被垃圾回收。
+- 示例：
+  ```javascript
+  let obj = { name: 'Alice' };
+  const map = new Map();
+  map.set(obj, 'value');
+  obj = null; // obj 被置为 null，但 map 中仍然有对该对象的引用
+  console.log(map); // { { name: 'Alice' } => 'value' }
+  ```
+
+**WeakMap**：
+
+- **弱引用**：`WeakMap` 中的键是弱引用，键所指向的对象如果没有其他引用，会被垃圾回收机制回收。
+- 示例：
+  ```javascript
+  let obj = { name: 'Alice' };
+  const weakMap = new WeakMap();
+  weakMap.set(obj, 'value');
+  obj = null; // obj 被置为 null，WeakMap 自动移除该键值对
+  // 无法直接验证键值对是否存在，因为 WeakMap 不支持遍历
+  ```
+
+---
+
+**3. 遍历能力**
+
+**Map**：
+
+- 支持遍历，可以使用 `keys()`、`values()`、`entries()` 和 `forEach()` 方法遍历所有键值对。
+- 示例：
+  ```javascript
+  const map = new Map();
+  map.set('key1', 'value1');
+  map.set('key2', 'value2');
+  for (const [key, value] of map.entries()) {
+    console.log(key, value);
+  }
+  ```
+
+**WeakMap**：
+
+- 不支持遍历。因为 `WeakMap` 的键是弱引用，为了保护垃圾回收机制的透明性，无法获取所有键值对。
+- 示例：
+  ```javascript
+  const weakMap = new WeakMap();
+  const obj1 = {};
+  weakMap.set(obj1, 'value1');
+  // 无法遍历 weakMap，只能通过键直接访问值
+  console.log(weakMap.get(obj1)); // 'value1'
+  ```
+
+---
+
+**4. 用途**
+
+**Map**：
+
+- 用于需要存储和操作键值对，且需要遍历或长期保留数据的场景。
+- 常见用途：
+  - 维护一个可枚举的键值对集合。
+  - 替代普通对象，用于避免键必须是字符串的问题。
+
+**WeakMap**：
+
+- 用于需要弱引用键的场景，常用于解决内存泄漏问题。
+- 常见用途：
+  - 缓存：在某些场景中，弱引用可以让缓存对象在不再被使用时自动释放内存。
+  - 私有数据存储：将对象作为键，将私有数据存储为值。
+
+---
+
+**5. 性能**
+
+- 在实际操作中，`Map` 和 `WeakMap` 的性能相差不大，选择哪种结构主要取决于具体使用场景。
+- `WeakMap` 由于不支持遍历，操作相对简单，某些情况下可能有微小的性能优势。
+
+---
+
+**对比总结**
+
+| 特性                | **Map**                                   | **WeakMap**                              |
+|---------------------|-------------------------------------------|------------------------------------------|
+| **键的类型**        | 任意类型（基本类型和对象）                 | 必须是对象                                |
+| **引用类型**        | 强引用                                    | 弱引用                                   |
+| **垃圾回收**        | 键不会被自动回收                          | 键可被自动回收                           |
+| **是否可遍历**      | 支持遍历                                  | 不支持遍历                               |
+| **用途**            | 通用存储和操作键值对                     | 私有数据存储、缓存管理                   |
+
+选择时，通常在需要强引用和遍历能力时使用 `Map`；在关注内存管理、避免内存泄漏时使用 `WeakMap`。
 
 
 # TS
@@ -1573,6 +1856,21 @@ Ts 函数重载，第一个参数不同影响第二个参数，先把每种情�
 ## TS 和 JS 通信
 
 1. 可以使用模版字符串的形式 \``
+
+   ```ts
+   interface IProps {
+       foo?: string;
+       bar: number;
+   }
+   
+   type GetOptional<T> = {
+       [K in keyof T as `get${Capitalize<K & string>}`]: T[K]
+   }
+   
+   let keys: GetOptional<IProps>
+   // { getFoo?: string, getBar: number }
+   ```
+
 2. 映射
 
 ```ts
@@ -1616,6 +1914,24 @@ const res = validate(
 
 const a = res.a; // string
 const b = res.b; // number
+```
+
+
+
+## 获取对象里的可选字段
+
+```ts
+interface IProps {
+    foo?: string;
+    bar: number;
+}
+
+type GetOptional<T> = {
+    [K in keyof T as T[K] extends Required<T>[K] ? never : K]: T[K]
+}
+
+let keys: GetOptional<IProps>
+// { foo: string }
 ```
 
 
@@ -1664,6 +1980,8 @@ getLetterWidth('foo')
 # Node
 
 ## Node 和 浏览器环境对微任务的处理差异(node12之前)
+
+> 一个宏任务是事件循环的一个组成部分，但不等同于整个事件循环周期
 
 浏览器环境下，microtask 的任务队列是每个 macrotask 执行完之后执行。而在 Node.js 中，microtask 会在事件循环的各个阶段之间执行，也就是一个阶段执行完毕，就会去执行 microtask 队列的任务。
 
@@ -1781,6 +2099,39 @@ vetur 默认格式化 template 的插件是 prettier，需要改下 vscode 配�
 
 
 # 前端场景
+
+## 性能优化
+
+- html 返回前
+  - dns 预解析 dns-prefetch
+  - cdn
+  - 浏览器缓存 强缓存 协商缓存
+  - gzip
+  - http2 多路复用，并行加载
+  - 多域存放资源
+- html 内容
+  - css 最开始尽量小
+  - 内联 script 标签内的无复杂计算
+  - 外链 script 标签放到最后面
+  - 骨架屏
+  - js 分包 cdn tree-shaking
+  - async defer
+- 业务相关
+  - 无相互依赖资源并行请求
+- 其他
+  - 计算量大 -> web worker 后端
+  - 数据量大 -> 懒加载
+  - 组件多 -> 分批渲染
+  - ssr
+  - 对 dom 频繁操作 -> 防抖节流
+  - react
+    - 避免不必要的渲染 useMemo useCallback
+    - Fragment
+    - key
+    - 解除事件监听
+    - 优化 context
+
+
 
 ## 开发中的广告处理
 
@@ -2129,7 +2480,7 @@ body {
 
 #### \<script>标签会阻塞 DOM 解析和渲染
 
-<script> 的 加载、解析和执行都会阻塞 DOM 的解析和渲染。从客观分析是： js 可以操作 DOM，浏览器为了防止渲染过程出现不可预期的结果，让 GUI 渲染线程和 JS 引擎线程互斥，即解析器在遇到 <script> 标记会立即加载、解析执行脚本，文档的解析将停止，直到脚本执行完毕
+\<script> 的 加载、解析和执行都会阻塞 DOM 的解析和渲染。从客观分析是： js 可以操作 DOM，浏览器为了防止渲染过程出现不可预期的结果，让 GUI 渲染线程和 JS 引擎线程互斥，即解析器在遇到 \<script> 标记会立即加载、解析执行脚本，文档的解析将停止，直到脚本执行完毕
 
 ```html
 <html>
@@ -2363,7 +2714,7 @@ onLoad(() => {
 - 减少首屏 css 和 js 加载时间(可以通过 Webpack 分包、路由懒加载、资源压缩等等方式)
 - 减少首屏 js 的同步执行时间(主要是 for 循环阻塞线程)
 
-将 CSS 放在文件头部，JavaScript 文件放在底部
+- 将 CSS 放在文件头部，JavaScript 文件放在底部
 
 - 如果 css 放在文件中部或者底部，遇到 \<link> 标签渲染无样式的页面，加载完 css 又重新渲染有样式的页面，浏览器会两次渲染。同时用户在第一次感知是"丑陋的"。Javascript 放在底部可以让用户先看到页面，避免长时间白屏
 
@@ -2466,7 +2817,7 @@ async脚本的加载不计入DOMContentLoaded事件统计，也就是说下图�
 
 引入 MDN 上概念：
 
-**HTTP** `**POST**` **方法** 发送数据给服务器. 请求主体的类型由 `Content-Type` 首部指定.
+**HTTP** `POST` **方法** 发送数据给服务器. 请求主体的类型由 `Content-Type` 首部指定.
 
 PUT 和`POST`方法的区别是,PUT方法是幂等的：连续调用一次或者多次的效果相同（无副作用）。连续调用同一个POST可能会带来额外的影响，比如多次提交订单。
 
@@ -3668,6 +4019,47 @@ LRUCache.prototype.put = function(key, value) {
     - 递归
     - 迭代查询（不会）
 
+
+
+## 合并两个有序数组
+
+
+
+## 最长递增子序列
+```js
+/**
+ * 4 45  1 45  1 12  1 12 127  1 12 123  1 12 1236  1 12 123 1236 12369
+ * @param {number[]} nums 
+ */
+function LTS(nums) {
+    if(nums.length === 0) {
+        return []
+    }
+    const results = [[nums[0]]]
+    for (let index = 1; index < nums.length; index++) {
+        const n = nums[index];
+        _update(n)
+    }
+    function _update(n) {
+        for (let i = results.length - 1; i >=0; i--) {
+            const line = results[i]
+            const tail = line[line.length - 1]
+            if(n > tail) {
+                results[i+1] = [...line, n]
+                return
+            }
+        }
+        results[0] = [n]
+    }
+    return results[results.length - 1]
+}
+
+console.log(LTS([4, 5, 1, 2, 7, 3, 6, 9]))
+```
+
+
+
+
 # Docker
 
 项目中的模块可以通过 npm 管理，任何一个项目都可以下载 npm 包；项目中的环境依赖比如 nodejs、nginx等可以通过 docker 来管理，只需要从 [docker hub](https://hub.docker.com/) 中下载对应的镜像即可。甚至，我们整个项目都可以通过 docker 来管理，编写一些配置文件，其他设备克隆下来，执行命令就可以运行，适合于私有部署，不用关心宿主系统的环境问题。
@@ -3864,9 +4256,6 @@ location /foo {
 ```
 最后一个参数最好设置一个 403 页面 ⚠️ 最后一个参数如果设置 index.html 则走 nginx 默认路径 /etc/nginx/htmlindex.html 显然是不对的，可以变成 /index.html 或者 其他默认地址
 
-```powershell
-git aa ff # 
-```
 # React
 
 ## 基础语法
@@ -4266,6 +4655,22 @@ editVideo(row) {
 
 
 
+## Vue和React处理响应式的差异
+
+Vue：数据改变，依赖此数据的函数重新执行。通过函数执行得出需要更新的组件，能精准控制到自组件甚至每一个dom
+
+React：数据改变，其所属组件重新渲染，控制到组件级别
+
+
+
+## Vue2和Vue3 Diff算法的区别
+
+Vue2基于双端比较，逐层递归对比新旧虚拟dom，整体复杂度高效率低，对key的依赖高
+
+Vue3采用最长递增子序列策略减少不必要的更新。编译时静态分析模版标记静态节点，将组件拆分成块高效更新从而减少dom更新
+
+
+
 # 工程化
 
 ## moment-locales-webpack-plugin插件
@@ -4292,7 +4697,7 @@ module.exports = {
 
 
 
-## 前端请求错误优雅处理
+## 前端请求错误优雅处理(防御性编程)
 
 在日常开发中，经常出现由于后端报错导致整个系统都不可用的情况，原因总结有两个：
 
@@ -4419,6 +4824,43 @@ export const getNewApolloToggle = async params => {
 
 
 
+## 模块化
+
+模块化是一种重要的开发方式，它可以将代码拆分为独立模块，提高代码的可维护性和复用性。核心要解决的问题是要暴露接口和私有变量和函数
+
+1. 立即执行函数表达式（Immediately Invoked Function Expression，IIFE）
+
+2. commonjs  nodejs服务端模块化规范，每个文件都是一个模块，使用module.exports导出，require导入，导入进来后外层包裹一层函数执行，参数有exports，require，module。当首次require时，会执行函数并**缓存**，下次读取缓存结果
+
+3. amd（Asynchronous Module Definition）异步加载，requirejs是amd的实现：define定义模块，require加载模块，同时可以传入一个执行函数，只有前面模块全部加载完成才会执行
+
+4. cmd（Common Module Definition）通用模块定义，Seajs是cmd的实现，cmd定义模块使用define函数实现，参数只有一个，可以是函数也可以是对象，函数接收三个参数，require，exports，module，require.async可以异步加载，cmd无需开始定义依赖
+
+  ```js
+  define(function(require, exports, module) {
+    var add = require('math').add;
+    exports.increment = function(val) {
+   return add(val, 1);
+    };
+    module.id = "increment";
+  });
+  ```
+
+5. umd（Universal Module Definition）运行编译时让同一个代码模块在使用CommonJS、CMD、AMD的项目中运行
+
+6. Es6 ES模块化输出的是**值的引用**，编译时就确定模块间的关系（静态化）
+
+
+
+## 打包读取目录结构
+
+webpack require.context
+
+vite import.meta.glob
+
+
+## npm workspaces 解决了什么问题
+npm workspaces 解决了传统多包项目中依赖重复、包之间链接复杂、工具依赖过多等问题，是 Monorepo 项目的优秀内置解决方案。它简化了开发者的工作流程，提高了效率，特别适合需要统一管理和频繁开发多个包的项目。
 
 
 # 杂七杂八
